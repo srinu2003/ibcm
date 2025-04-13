@@ -23,6 +23,8 @@
 *.blg
 *.bbl
 *.glsdefs
+*.minted
+_minted*
 
 # Generated files by LaTeX editors
 *.acn
@@ -51,4 +53,5 @@
 *.orig
 
 # pdf
-report-draft.pdf
+report-easy.pdf
+report-single-file.pdf

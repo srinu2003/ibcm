@@ -32,16 +32,18 @@
 % === Color Definitions ===
 % These colors are used throughout the document for various elements
 % Modify them to match your institution's color scheme if necessary
-\definecolor{deepgray}{rgb}{0.4, 0.4, 0.4}    % Dark gray
-\definecolor{deepblue}{rgb}{0,0,0.6}          % Dark blue
-\definecolor{deepred}{rgb}{0.6,0,0}           % Dark red
-\definecolor{deepgreen}{rgb}{0,0.5,0}         % Dark green
-\definecolor{codegreen}{rgb}{0,0.6,0}         % Green for comments
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}      % Gray for line numbers
-\definecolor{codepurple}{rgb}{0.58,0,0.82}    % Purple for strings
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92} % Light background
+\definecolor{bg}{HTML}{F2F2F2}                % Background color for code blocks
+\definecolor{deepgray}{HTML}{666666}          % Dark gray
+\definecolor{deepblue}{HTML}{000099}          % Dark blue
+\definecolor{deepred}{HTML}{990000}           % Dark red
+\definecolor{deepgreen}{HTML}{008000}         % Dark green
+\definecolor{codegreen}{HTML}{009900}         % Green for comments
+\definecolor{codegray}{HTML}{808080}          % Gray for line numbers
+\definecolor{codepurple}{HTML}{9400D3}        % Purple for strings
+\definecolor{backcolour}{HTML}{F2F2EC}        % Light background
 \definecolor{brown}{HTML}{612322}             % Brown for headers/footers
 \definecolor{darkred}{HTML}{C00000}          % Dark red for titles
+
 % Project Report Title Styling
 \newtcolorbox{titlebox}{
     colframe=white,             % Frame color white (invisible)
@@ -76,10 +78,11 @@
     morestring=[b]',
     morestring=[b]``,
     basicstyle={
-        \ttfamily
-        \hyphenpenalty=50
-        \exhyphenpenalty=50
-    },
+            \ttfamily
+            \hyphenpenalty=50
+            \exhyphenpenalty=50
+            \linespread{1}\selectfont % Add \linespread{1}
+        },
     breakatwhitespace=false,
     breaklines=true,
     captionpos=b,
@@ -92,13 +95,22 @@
     tabsize=2
 }
 
+\lstdefinelanguage{JavaScript}{
+    keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with, let, const},
+    sensitive=true,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[b]'
+}
+
 \lstdefinestyle{graystyle}{
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{codepurple},
-    basicstyle={\ttfamily\hyphenpenalty=50\exhyphenpenalty=50},
+    basicstyle={\ttfamily\hyphenpenalty=50\exhyphenpenalty=50\linespread{1}\selectfont}, % Add \linespread{1}
     comment=[l]{\#},
     commentstyle=\color{deepgreen}\footnotesize\rmfamily,
     breakatwhitespace=false,
@@ -114,6 +126,35 @@
 }
 
 \lstset{style=graystyle}
+
+% captions settinng
+\captionsetup[listing]{
+    font=small, % Set font size for captions
+    labelformat=simple, % Use simple label format
+    labelfont=normalfont,
+    textfont={bf, tt},
+}
+
+% Configure listing settings for minted
+% \usemintedstyle{friendly}
+% \usemintedstyle{borland}
+\setminted{
+    linenos=true,
+    numbersep=5pt,
+    frame=none,
+    tabsize=2,
+    breaklines=true,
+    breakanywhere=true,
+    autogobble=true,
+    baselinestretch=1, % Set line spacing for minted
+}
+
+% Configure minted, listings, and algorithm environments
+% Synchronize the `listing` counter with `lstlisting`
+\AtBeginEnvironment{listing}{\refstepcounter{lstlisting}}
+\renewcommand{\thelisting}{\thechapter.\arabic{lstlisting}}
+\renewcommand{\theFancyVerbLine}{\normalfont\tiny\color{gray}\arabic{FancyVerbLine}} % Customize line number style
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
 
 % Set page geometry with 1-inch margins on A4 paper
 \geometry{margin=1in}  % Uncomment to set 1-inch margins
