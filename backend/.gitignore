@@ -6,3 +6,5 @@ Construction-Site-Safety-*/
 # *.yaml
 # runs/
 yolo*.pt
+sample.jpg
+output_image.jpg

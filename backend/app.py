@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify,send_from_directory
 import os
 from werkzeug.utils import secure_filename
-from ml_model import analyze_images
+from image_alignment_pipeline import analyze_images  # Assuming this is your custom module for image analysis
+import json
 from flask_cors import CORS
 from ultralytics import YOLO
 from PIL import Image
