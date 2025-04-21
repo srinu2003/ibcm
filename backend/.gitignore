@@ -5,3 +5,4 @@ __pycache__/
 Construction-Site-Safety-*/
 *.yaml
 # runs/
+yolo*.pt
