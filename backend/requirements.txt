@@ -2,3 +2,13 @@ flask
 ultralytics
 scikit-image
 flask_cors
+
+Werkzeug
+flask-cors
+pillow
+opencv-python
+numpy
+python-dotenv
+roboflow
+matplotlib
+torch

@@ -56,7 +56,7 @@ export default function Page() {
               </Breadcrumb>
             </div>
             <div className="flex items-center gap-2">
-              <FontSizeToggle increaseFontSize={increaseFontSize} decreaseFontSize={decreaseFontSize} />
+              {/* <FontSizeToggle increaseFontSize={increaseFontSize} decreaseFontSize={decreaseFontSize} /> */}
               <NotificationPopover />
               <ThemeToggle />
             </div>
