@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify,send_from_directory
 import os
 from werkzeug.utils import secure_filename
-from image_alignment_pipeline import analyze_images  # Assuming this is your custom module for image analysis
+from image_ssim_pipeline import analyze_images_api
 import json
 from flask_cors import CORS
 from ultralytics import YOLO
@@ -41,7 +41,7 @@ def process_images_for_category(category):
         current_image.save(current_image_path)
 
         # Analyze images with the ML model
-        progress_data = analyze_images(previous_image_path, current_image_path, category)
+        progress_data = analyze_images_api(previous_image_path, current_image_path, category)
 
         return jsonify(progress_data), 200
     else:
