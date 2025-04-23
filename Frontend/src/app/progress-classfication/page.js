@@ -35,13 +35,19 @@ const ImageUpload = () => {
     formData.append('current_image', currentImage);
 
     try {
-      const response = await axios.post(`http://localhost:5000/upload/${category}`, formData, {
+      const response = await axios.post(`http://localhost:5000/api/ssim`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setProgressData(response.data);
-      console.log(response.data);
+      // Adapt to new API response structure
+      setProgressData({
+        ...response.data,
+        // fallback for old fields if needed
+        work_done_percentage: response.data.work_done_percentage ?? 0,
+        category: category,
+        similarity_score: response.data.score,
+      });
       setError(null);
     } catch (err) {
       setError(`An error occurred: ${err.message}`);
@@ -96,6 +102,36 @@ const ImageUpload = () => {
           <p><strong>Category:</strong> {progressData.category}</p>
           <p><strong>Work Done Percentage:</strong> {progressData.work_done_percentage}%</p>
           <p><strong>Similarity Score:</strong> {progressData.similarity_score}</p>
+
+          {/* Show overlap mask image if present */}
+          {progressData.overlap_mask && (
+            <div className={styles.formGroup}>
+              <h3>Overlap Mask</h3>
+              <img
+                src={`data:image/png;base64,${progressData.overlap_mask}`}
+                alt="Overlap Mask"
+                style={{ maxWidth: '100%', border: '1px solid #ccc' }}
+              />
+            </div>
+          )}
+
+          {/* Show homography matrix if present */}
+          {progressData.homography && (
+            <div className={styles.formGroup}>
+              <h3>Homography Matrix</h3>
+              <table style={{ borderCollapse: 'collapse' }}>
+                <tbody>
+                  {progressData.homography.map((row, i) => (
+                    <tr key={i}>
+                      {row.map((val, j) => (
+                        <td key={j} style={{ border: '1px solid #ccc', padding: '2px 6px' }}>{val.toExponential ? val.toExponential(3) : val}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Bar chart for work done */}
           <div className={styles.chartContainer}>

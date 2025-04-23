@@ -1,101 +1,127 @@
-from flask import Flask, request, jsonify,send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 import os
 from werkzeug.utils import secure_filename
-from image_ssim_pipeline import analyze_images_api
-import json
 from flask_cors import CORS
 from ultralytics import YOLO
-from PIL import Image
+import numpy as np
+import cv2
+import base64
+import tempfile
+
+from image_ssim_pipeline import analyze_images_api
+from ppe_detection import detect_ppe
+
 app = Flask(__name__)
 CORS(app)
-yolo_model = YOLO('static/upload/ppe.pt')
 
-# Configure upload folder and allowed extensions
 UPLOAD_FOLDER = './static/uploads/'
 RESULT_FOLDER = './static/results/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+PPE_MODEL_PATH = os.getenv("PPE_MODEL_PATH", "Model/ibcm-ppe.pt")
 
-# Helper function to check allowed file types
+# Ensure upload/result folders exist at startup
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(RESULT_FOLDER, exist_ok=True)
+
+yolo_model = YOLO(PPE_MODEL_PATH)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Generic route to handle image uploads for analysis
-def process_images_for_category(category):
+def encode_image(img, ext='.jpg'):
+    _, buffer = cv2.imencode(ext, img)
+    return base64.b64encode(buffer).decode('utf-8')
 
-    if 'previous_image' not in request.files or 'current_image' not in request.files:
-        return jsonify({"error": "Please provide both previous and current images"}), 400
+def get_image_from_request(file_storage):
+    if not allowed_file(file_storage.filename):
+        raise ValueError("Invalid file type")
+    img_bytes = np.frombuffer(file_storage.read(), np.uint8)
+    img = cv2.imdecode(img_bytes, cv2.IMREAD_COLOR)
+    if img is None:
+        raise ValueError("Invalid image data")
+    return img
 
-    previous_image = request.files['previous_image']
-    current_image = request.files['current_image']
+@app.route('/api/ssim', methods=['POST'])
+def api_ssim():
+    """
+    Progress API SSIM:
+    Accepts two images, computes SSIM and alignment, returns:
+      - score, homography, img1_overlap, img2_overlap, outlined, ssim_img, overlap_mask (all images base64-encoded)
+    """
+    try:
+        prev_file = request.files['previous_image']
+        curr_file = request.files['current_image']
+        prev_img = get_image_from_request(prev_file)
+        curr_img = get_image_from_request(curr_file)
 
-    if previous_image and allowed_file(previous_image.filename) and current_image and allowed_file(current_image.filename):
-        prev_filename = secure_filename(previous_image.filename)
-        curr_filename = secure_filename(current_image.filename)
+        steady_camera = request.form.get('steady_camera', 'false').lower() == 'true'
+        resize_width = int(request.form.get('resize_width', 500))
+        win_size = tuple(map(int, request.form.get('win_size', '11,11').split(',')))
+        resize_factor = int(request.form.get('resize_factor', 1))
 
-        previous_image_path = os.path.join(app.config['UPLOAD_FOLDER'], prev_filename)
-        current_image_path = os.path.join(app.config['UPLOAD_FOLDER'], curr_filename)
+        # Save images to temporary files for compatibility
+        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as prev_tmp, \
+             tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as curr_tmp:
+            cv2.imwrite(prev_tmp.name, prev_img)
+            cv2.imwrite(curr_tmp.name, curr_img)
+            prev_path = prev_tmp.name
+            curr_path = curr_tmp.name
 
-        # Save images
-        previous_image.save(previous_image_path)
-        current_image.save(current_image_path)
-
-        # Analyze images with the ML model
-        progress_data = analyze_images_api(previous_image_path, current_image_path, category)
-
-        return jsonify(progress_data), 200
-    else:
-        return jsonify({"error": "Invalid file types"}), 400
-
-# API route for foundation analysis
-@app.route('/upload/foundation', methods=['POST'])
-def foundation_analysis():
-    return process_images_for_category('foundation')
-
-# API route for super structure analysis
-@app.route('/upload/superstructure', methods=['POST'])
-def superstructure_analysis():
-    return process_images_for_category('superstructure')
-
-# API route for interiors analysis
-@app.route('/upload/interiors', methods=['POST'])
-def interiors_analysis():
-    return process_images_for_category('interiors')
-
-@app.route('/upload', methods=['POST'])
-def upload_image():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "Empty file name"}), 400
-
-    if file and allowed_file(file.filename):
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
-        file.save(image_path)
-
-        # Perform YOLOv8 inference
-        results = yolo_model.predict(image_path)
-
-        # Save the results image (with bounding boxes)
-        results_img = results[0].plot()  # Visualize the detection
-        results_img_path = os.path.join(RESULT_FOLDER, secure_filename(file.filename))
-        Image.fromarray(results_img).save(results_img_path)
-
-        # Prepare JSON response with detection information
-        detected_objects = results[0].boxes.data.tolist()  # List of detected objects
+        try:
+            results = analyze_images_api(
+                prev_path,
+                curr_path,
+                steady_camera=steady_camera,
+                resize_width=resize_width,
+                win_size=win_size,
+                resize_factor=resize_factor
+            )
+        finally:
+            # Clean up temp files
+            os.remove(prev_path)
+            os.remove(curr_path)
 
         return jsonify({
-            "message": "Detection successful",
-            "uploaded_image_path": f'static/uploads/{secure_filename(file.filename)}',
-            "result_image_path": f'static/results/{secure_filename(file.filename)}',
-            "detected_objects": detected_objects  # List of objects with details (class, confidence, etc.)
+            "score": results["score"],
+            "homography": results["homography"].tolist() if hasattr(results["homography"], "tolist") else results["homography"],
+            "img1_overlap": encode_image(results["img1_overlap"]),
+            "img2_overlap": encode_image(results["img2_overlap"]),
+            "outlined": encode_image(results["outlined"]),
+            "ssim_img": encode_image(results["ssim_img"]),
+            "overlap_mask": encode_image(results["overlap_mask"], ext='.png')
         }), 200
-    else:
-        return jsonify({"error": "Invalid file type"}), 400
+    except KeyError:
+        return jsonify({"error": "Please provide both previous and current images"}), 400
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-# Serve images from the static/uploads and static/results folder
+@app.route('/api/ppe-detection', methods=['POST'])
+def api_ppe_detection():
+    """
+    PPE Detection API:
+    Accepts one image, runs PPE detection, returns:
+      - class_counts, detailed_counts, annotated_image (base64-encoded)
+    """
+    try:
+        file = request.files['file']
+        img = get_image_from_request(file)
+        result = detect_ppe(img, yolo_model)
+        class_counts = {k: int(v) for k, v in result["class_counts"].items()}
+        detailed_counts = {k: int(v) for k, v in result["detailed_counts"].items()}
+        return jsonify({
+            "class_counts": class_counts,
+            "detailed_counts": detailed_counts,
+            "annotated_image": encode_image(result["annotated_image"])
+        }), 200
+    except KeyError:
+        return jsonify({"error": "No file uploaded"}), 400
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/static/uploads/<filename>')
 def serve_uploaded_image(filename):
@@ -105,11 +131,5 @@ def serve_uploaded_image(filename):
 def serve_result_image(filename):
     return send_from_directory(RESULT_FOLDER, filename)
 
-
-
 if __name__ == '__main__':
-    # Create upload folder if it doesn't exist
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-    
     app.run(debug=True)

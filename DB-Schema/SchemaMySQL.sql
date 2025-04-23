@@ -120,7 +120,7 @@ DROP TABLE IF EXISTS `ibcm`.`images` ;
 CREATE TABLE IF NOT EXISTS `ibcm`.`images` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `project_id` INT NOT NULL,
-  `uploaded_by` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `image_url` TEXT NOT NULL,
   `activity_type` ENUM('foundation', 'super_structure', 'facade', 'interiors', 'finishing') NOT NULL,
   `stage_detected` ENUM('foundation', 'super_structure', 'facade', 'interiors', 'finishing') NULL DEFAULT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `ibcm`.`images` (
     FOREIGN KEY (`project_id`)
     REFERENCES `ibcm`.`projects` (`id`),
   CONSTRAINT `images_ibfk_2`
-    FOREIGN KEY (`uploaded_by`)
+    FOREIGN KEY (`user_id`)
     REFERENCES `ibcm`.`users` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -139,7 +139,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 CREATE INDEX `project_id` ON `ibcm`.`images` (`project_id` ASC) VISIBLE;
 
-CREATE INDEX `uploaded_by` ON `ibcm`.`images` (`uploaded_by` ASC) VISIBLE;
+CREATE INDEX `user_id` ON `ibcm`.`images` (`user_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -204,7 +204,7 @@ VALUES
 
 -- end attached script 'projects'
 -- begin attached script 'images'
-INSERT INTO images (project_id, uploaded_by, image_url, activity_type, stage_detected, remarks)
+INSERT INTO images (project_id, user_id, image_url, activity_type, stage_detected, remarks)
 VALUES 
 (1, 2, 'https://yourcdn.com/images/img1.jpg', 'foundation', 'foundation', 'Initial excavation work'),
 (1, 2, 'https://yourcdn.com/images/img2.jpg', 'super_structure', 'super_structure', 'Pillars and beams progress'),

@@ -4,10 +4,11 @@ import numpy as np
 from dotenv import load_dotenv
 from ultralytics import YOLO
 from ultralytics.engine.results import Boxes, Results
+import yaml
 
 load_dotenv()  # Load environment variables from .env file
 
-class_colors: dict = {
+CLASS_COLORS: dict = {
     "Person": (255, 0, 0),  # Blue
     "Hardhat": (0, 0, 255),  # Red
     "NO-Hardhat": (0, 0, 128),  # Dark Red
@@ -56,12 +57,12 @@ def draw_text_with_background(
     cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
     cv2.putText(frame, text, (x, y), font, font_scale, color, thickness)
 
-def detect_ppe(image: np.ndarray) -> Dict[str, Any]:
+def detect_ppe(image: np.ndarray, model: YOLO) -> Dict[str, Any]:
     """
-    Perform PPE detection on the input image.
-
+    Perform PPE detection on the input image using a preloaded YOLO model.
     Args:
         image: Input image as a numpy array (BGR).
+        model: Preloaded YOLO model instance.
 
     Returns:
         dict: {
@@ -77,11 +78,7 @@ def detect_ppe(image: np.ndarray) -> Dict[str, Any]:
             'annotated_image': np.ndarray
         }
     """
-    try:
-        model: YOLO = YOLO("Model/ibcm-ppe.pt")
-        model.to("cuda")
-    except Exception as e:
-        raise RuntimeError(f"Unable to load the YOLO model: {e}")
+
 
     frame = image.copy()
     try:
@@ -123,7 +120,7 @@ def detect_ppe(image: np.ndarray) -> Dict[str, Any]:
                 confidence = conf[i]
                 cls = int(cls_ids[i])
                 label = f"{model.names[cls]} ({confidence:.2f})"
-                color = class_colors.get(model.names[cls], (255, 255, 255))
+                color = CLASS_COLORS.get(model.names[cls], (255, 255, 255))
                 cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
                 draw_text_with_background(frame, label, (x1, y1 - 10), font_scale=0.4, color=(255, 255, 255),
                                          bg_color=color, alpha=0.8, padding=4)
@@ -152,4 +149,6 @@ def detect_ppe(image: np.ndarray) -> Dict[str, Any]:
     }
 
 if __name__ == "__main__":
-    print(YOLO("Model/ibcm-ppe.pt").names)
+    with open("Model/data.yaml", "r") as f:
+        class_names = yaml.safe_load(f).get("names", [])
+    print("Loaded class names from YAML:", class_names)
