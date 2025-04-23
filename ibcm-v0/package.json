@@ -2,9 +2,9 @@
   "name": "ibcm-v0",
   "version": "0.1.0",
   "private": true,
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
-  "license": "ISC",
-  "author": "",
+  "description": "IBCM: Image Based Construction Monitoring - A Next.js project for monitoring construction progress and safety compliance.",
+  "license": "MIT",
+  "author": "Srinivas Rao Tammireddy, Amulya Reddy Yeruva",
   "type": "module",
   "main": "index.js",
   "directories": {
@@ -35,11 +35,14 @@
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
+    "recharts": "^2.15.3",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/react-dropzone": "^4.2.2",
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
   }
