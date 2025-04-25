@@ -187,10 +187,27 @@ erDiagram
         datetime created_at
     }
     
+    COUNTRIES {
+        int id PK
+        string name
+    }
+    
+    STATES {
+        int id PK
+        string name
+        int country_id FK
+    }
+    
+    CITIES {
+        int id PK
+        string name
+        int state_id FK
+    }
+    
     LOCATIONS {
         int id PK
-        string address_line1
-        string address_line2
+        string address_line_one
+        string address_line_two
         int city_id FK
         int state_id FK
         int country_id FK
@@ -215,14 +232,23 @@ erDiagram
         int id PK
         int project_id FK
         int user_id FK
-        string image_url
+        string image_path
         enum image_type
         enum activity_type
-        enum stage_detected
         string remarks
         boolean is_valid
         string error_message
         datetime uploaded_at
+    }
+    
+    IMAGE_ANALYSIS {
+        int id PK
+        int project_id FK
+        string previous_image_path
+        string current_image_path
+        decimal ssim_score
+        string detected_change
+        datetime analysis_time
     }
     
     PROGRESS_LOGS {
@@ -261,6 +287,13 @@ erDiagram
         datetime action_time
     }
     
+    COUNTRIES ||--o{ STATES : has
+    STATES ||--o{ CITIES : has
+    
+    COUNTRIES ||--o{ LOCATIONS : located_in
+    STATES ||--o{ LOCATIONS : located_in
+    CITIES ||--o{ LOCATIONS : located_in
+    
     USERS ||--o{ PROJECTS : creates
     USERS ||--o{ IMAGES : uploads
     USERS ||--o{ AUDIT_LOGS : performs
@@ -269,6 +302,7 @@ erDiagram
     
     PROJECTS ||--o{ IMAGES : contains
     PROJECTS ||--o{ PROGRESS_LOGS : tracks
+    PROJECTS ||--o{ IMAGE_ANALYSIS : analyzes
     
     IMAGES ||--o{ PPE_RESULTS : analyzed_for
     IMAGES ||--o{ PROGRESS_LOGS : previous
@@ -490,24 +524,59 @@ sequenceDiagram
 ## 7. Database Requirements
 
 ### 7.1 Entity Relationship
-The database schema includes the following key entities:
-- Users
-- Projects
-- Locations (Countries, States, Cities)
-- Images (with image_type field to distinguish progress vs. safety images)
-- Progress Logs
-- PPE Results
-- PPE Detection
-- PPE Types
-- Audit Logs
+The database schema includes the following key entities and their relationships:
+
+1. **Users**
+   - Contains user account information including authentication credentials and role
+   - Roles are stored as an ENUM ('admin', 'engineer', 'auditor', 'ulb_official', 'agency_official')
+   - Each user may create multiple projects and upload multiple images
+
+2. **Location Hierarchy**
+   - **Countries**: Basic country information
+   - **States**: States/provinces within countries
+   - **Cities**: Cities within states
+   - **Locations**: Detailed location information including address, coordinates, and references to countries, states and cities
+
+3. **Projects**
+   - Core project information including name, description, timeline, and status
+   - Linked to a specific location and the user who created it
+   - Status tracked as an ENUM ('planned', 'in_progress', 'completed', 'on_hold')
+
+4. **Images**
+   - Metadata about uploaded images including URL/path, type, and validity status
+   - Distinguished by image_type ENUM ('progress', 'safety')
+   - Categorized by activity_type ENUM ('foundation', 'super_structure', 'facade', 'interiors', 'finishing')
+   - Associated with specific projects and users
+
+5. **Image Analysis**
+   - Records of image comparisons performed for construction progress monitoring
+   - Stores paths to compared images, similarity scores, and detected changes
+   - Linked to specific projects
+
+6. **Progress Logs**
+   - Similar to Image Analysis but references specific image records
+   - Links previous and current images for tracking construction progress over time
+   - Stores SSIM scores and detected changes
+
+7. **PPE Detection System**
+   - **PPE Types**: Reference table of all PPE types that can be detected
+   - **PPE Results**: Records of PPE detection analysis performed on images
+   - **PPE Detection**: Detailed counts of each PPE type detected in an image
+
+8. **Audit Logs**
+   - Security audit trail of user actions within the system
+   - Records user ID, action performed, details, and timestamp
 
 ### 7.2 Data Requirements
-- User data shall be securely stored with encrypted passwords
-- Images shall be stored with metadata including upload date, project, image type, and classification
-- Progress logs shall track the comparison between images and calculated metrics
-- PPE detection results shall store counts for each type of equipment detected
-- All database operations shall maintain referential integrity
-- Indexes shall be implemented for frequently queried fields
+- User passwords shall be stored as secure hashes (TEXT datatype)
+- Location coordinates shall use DECIMAL data type with appropriate precision (latitude DECIMAL(10,8), longitude DECIMAL(11,8))
+- Similarity scores shall use DECIMAL(5,4) to store values between 0 and 1 with four decimal places
+- Image paths shall be stored as TEXT to accommodate varying path lengths
+- All tables shall include appropriate primary keys, using AUTO_INCREMENT for ID fields
+- Foreign key constraints shall be implemented to maintain referential integrity
+- TIMESTAMP data type shall be used for audit records and time-sensitive data
+- Appropriate indexing shall be implemented for frequently queried fields
+- ENUM types shall be used for fields with predefined value sets to ensure data consistency
 
 ---
 

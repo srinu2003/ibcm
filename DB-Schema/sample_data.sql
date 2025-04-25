@@ -17,7 +17,7 @@ VALUES
 ('Affordable Housing', 2, 'Multi-building housing complex for low-income families', '2024-11-15', '2026-03-31', 'planned', 5);
 
 -- Update images table insert to match new schema (user_id, is_valid, error_message)
-INSERT INTO images (project_id, user_id, image_url, activity_type, stage_detected, remarks, is_valid, error_message)
+INSERT INTO images (project_id, user_id, image_path, activity_type, stage_detected, remarks, is_valid, error_message)
 VALUES 
 (1, 2, 'https://yourcdn.com/images/img1.jpg', 'foundation', 'foundation', 'Initial excavation work', TRUE, ''),
 (1, 2, 'https://yourcdn.com/images/img2.jpg', 'super_structure', 'super_structure', 'Pillars and beams progress', TRUE, ''),

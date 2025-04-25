@@ -9,7 +9,7 @@ USE `ibcm` ;
 
 -- Users table using ENUM for role (no separate roles table)
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -20,13 +20,13 @@ CREATE TABLE users (
 
 -- Countries table
 CREATE TABLE countries (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- States table
 CREATE TABLE states (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     country_id INT NOT NULL,
     FOREIGN KEY (country_id) REFERENCES countries(id)
@@ -34,7 +34,7 @@ CREATE TABLE states (
 
 -- Cities table
 CREATE TABLE cities (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     state_id INT NOT NULL,
     FOREIGN KEY (state_id) REFERENCES states(id)
@@ -42,7 +42,7 @@ CREATE TABLE cities (
 
 -- Location table (now references city, state, country)
 CREATE TABLE locations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     address_line_one VARCHAR(150),
     address_line_two VARCHAR(150),
     city_id INT,
@@ -58,15 +58,15 @@ CREATE TABLE locations (
 
 -- Images table (stores metadata and file path, validation status, error message)
 CREATE TABLE images (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     project_id INT NOT NULL,
     user_id INT NOT NULL,
-    image_url TEXT NOT NULL,
+    image_path TEXT NOT NULL,
     image_type ENUM('progress', 'safety') NOT NULL, -- distinguishes use case
     activity_type ENUM('foundation', 'super_structure', 'facade', 'interiors', 'finishing') NOT NULL,
     remarks TEXT DEFAULT NULL,
     is_valid BOOLEAN DEFAULT TRUE,
-    error_message TEXT DEFAULT '',
+    error_message TEXT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -74,7 +74,7 @@ CREATE TABLE images (
 
 -- Image Analysis table (stores SSIM and other analysis results for each image pair)
 CREATE TABLE image_analysis (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     project_id INT NOT NULL,
     previous_image_path TEXT NOT NULL,
     current_image_path TEXT NOT NULL,
@@ -84,33 +84,27 @@ CREATE TABLE image_analysis (
     FOREIGN KEY (project_id) REFERENCES projects(id)
 );
 
--- PPE Types table (reference for all PPE types)
-CREATE TABLE ppe_types (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
-);
-
 -- PPE Results table (stores PPE detection results for each image)
 CREATE TABLE ppe_results (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     image_id INT NOT NULL, -- links to images table
     detection_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    hardhat INT DEFAULT 0,
+    mask INT DEFAULT 0,
+    no_hardhat INT DEFAULT 0,
+    no_mask INT DEFAULT 0,
+    no_safety_vest INT DEFAULT 0,
+    person INT DEFAULT 0,
+    safety_cone INT DEFAULT 0,
+    safety_vest INT DEFAULT 0,
+    machinery INT DEFAULT 0,
+    vehicle INT DEFAULT 0,
     FOREIGN KEY (image_id) REFERENCES images(id)
-);
-
--- PPE Detection table (stores count for each PPE type per image)
-CREATE TABLE ppe_detection (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    ppe_result_id INT NOT NULL,
-    ppe_type_id INT NOT NULL,
-    count INT DEFAULT 0,
-    FOREIGN KEY (ppe_result_id) REFERENCES ppe_results(id),
-    FOREIGN KEY (ppe_type_id) REFERENCES ppe_types(id)
 );
 
 -- Projects table
 CREATE TABLE projects (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     location INT NOT NULL,
     description TEXT,
@@ -125,7 +119,7 @@ CREATE TABLE projects (
 
 -- Progress Logs table (for SSIM comparisons)
 CREATE TABLE progress_logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     project_id INT NOT NULL,
     previous_image_id INT,
     current_image_id INT,
@@ -139,7 +133,7 @@ CREATE TABLE progress_logs (
 
 -- Audit Logs table
 CREATE TABLE audit_logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     action VARCHAR(100) NOT NULL,
     details TEXT,

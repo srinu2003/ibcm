@@ -48,7 +48,7 @@ CREATE TABLE images (
     id INT AUTO_INCREMENT PRIMARY KEY,
     project_id INT NOT NULL,
     uploaded_by INT NOT NULL,
-    image_url TEXT NOT NULL,
+    image_path TEXT NOT NULL,
     activity_type ENUM('foundation', 'super_structure', 'facade', 'interiors', 'finishing') NOT NULL,
     stage_detected ENUM('foundation', 'super_structure', 'facade', 'interiors', 'finishing') DEFAULT NULL,
     remarks TEXT,

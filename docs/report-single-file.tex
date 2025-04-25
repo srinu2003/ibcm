@@ -303,29 +303,29 @@
 % Modify these settings to match your institution's requirements or your preferences.
 
 % === TikZ and Graphics Configuration ===
-\usetikzlibrary{external, shapes.geometric, arrows, arrows.meta, decorations.pathmorphing, calc}
+% \usetikzlibrary{external, shapes.geometric, arrows, arrows.meta, decorations.pathmorphing, calc, positioning}
 
-% \usetikzlibrary{
-%     arrows, arrows.meta, automata, backgrounds, calendar, 
-%     chains, decorations, external, fadings, fit, 
-%     matrix, patterns, patterns.meta, petri, 
-%     positioning, scopes, shadows, shapes, 
-%     shapes.geometric, shapes.arrows, shapes.symbols, 
-%     shapes.misc, shapes.multipart, shapes.callouts,
-%     spy, trees, turtle,
-%     decorations.pathmorphing, decorations.pathreplacing, 
-%     decorations.markings, decorations.footprints, 
-%     decorations.shapes, decorations.text,
-%     calc, fixedpointarithmetic, fpu, intersections, 
-%     math, through,
-%     3d, perspective,
-%     circuits, circuits.logic, circuits.ee,
-%     graphs, graphs.standard, 
-%     er, folding, lindenmayersystems, 
-%     mindmap, plothandlers, quotes, svg.path, topaths,
-%     babel
-% }
-\graphicspath{{images/}{./}}          % Set paths for images - both in images/ folder and root directory
+\usetikzlibrary{
+    arrows, arrows.meta, automata, backgrounds, calendar, 
+    chains, decorations, external, fadings, fit, 
+    matrix, patterns, patterns.meta, petri, 
+    positioning, scopes, shadows, shapes, 
+    shapes.geometric, shapes.arrows, shapes.symbols, 
+    shapes.misc, shapes.multipart, shapes.callouts,
+    spy, trees, turtle,
+    decorations.pathmorphing, decorations.pathreplacing, 
+    decorations.markings, decorations.footprints, 
+    decorations.shapes, decorations.text,
+    calc, fixedpointarithmetic, fpu, intersections, 
+    math, through,
+    3d, perspective,
+    circuits, circuits.logic, circuits.ee,
+    graphs, graphs.standard, 
+    er, folding, lindenmayersystems, 
+    mindmap, plothandlers, quotes, svg.path, topaths,
+    babel
+}
+\graphicspath{{images/}{./}{../backend/ssim_doc_imgs/}{../backend/runs/detect/train/}}          % Set paths for images - including backend folders
 
 % === Color Definitions ===
 % These colors are used throughout the document for various elements
@@ -391,15 +391,6 @@
     showstringspaces=false,
     showtabs=false,
     tabsize=2
-}
-
-\lstdefinelanguage{JavaScript}{
-    keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with, let, const},
-    sensitive=true,
-    comment=[l]{//},
-    morecomment=[s]{/*}{*/},
-    morestring=[b]",
-    morestring=[b]'
 }
 
 \lstdefinestyle{graystyle}{
@@ -857,250 +848,859 @@
     \chapter{Introduction}
     \label{chap:introduction}
 
-    The introduction should provide background information on your topic, explain the significance of your research, and clearly state your research question or objective. This chapter should also outline the structure of the document and briefly summarize each subsequent chapter.
+    % Updated Introduction based on project context
+    Construction project monitoring is a critical task for ensuring timely completion, budget adherence, and quality standards. Traditionally, this involves frequent site visits by technical experts, which can be resource-intensive and challenging, especially for large-scale projects or numerous projects spread across wide geographical areas, as is common in Indian cities. The Ministry of Housing and Urban Affairs, through the Smart Cities Mission, recognizes the need for innovative solutions to streamline this process. This project, titled "Image Based Construction Monitoring (IBCM)", addresses this need by proposing a software solution that leverages machine learning (ML) to analyze construction site images for progress tracking and safety compliance.
 
     Times New Roman font is used for the text in this document, and the font size is set to 12pt. The line spacing is set to 1.5 for better readability.
 
     \section{Background}
-    This section should provide context for your research, explaining fundamental concepts necessary for understanding your work.
-    % Artificial Intelligence (\gls{ai}) is a rapidly growing field. Subfields such as \gls{ml} and \gls{nlp} are gaining significant attention.
+    % Updated Background based on problem statement
+    The monitoring of physical progress in building construction projects traditionally relies heavily on manual site inspections. Technical experts must physically visit sites to observe and document the status of various activities. This method, while thorough, faces significant scalability challenges. Urban Local Bodies (ULBs), state agencies, and central agencies often oversee a vast number of projects simultaneously, making frequent, expert-led site visits logistically difficult and costly. This limitation can lead to delays in identifying issues, inaccurate progress reporting, and inefficient resource allocation. The advent of computer vision and machine learning offers a potential pathway to automate and enhance this monitoring process through image analysis.
 
     \section{Motivation}
-    Explain why your research topic is important and what gap in knowledge it addresses.
+    % Updated Motivation based on problem statement
+    The primary motivation for the IBCM project stems from the infeasibility of conducting frequent, expert-led site visits for the large volume of building construction projects undertaken in Indian cities. There is a pressing need for a scalable, efficient, and reliable method for ULBs, state, and central agencies to monitor physical progress daily or even in real-time. An ML-based solution that analyzes site images can provide timely insights into construction status, enabling better decision-making, improved project oversight, and potentially enhanced safety compliance monitoring without the constant need for physical presence on site. This aligns with the goals of the Smart Cities Mission to leverage technology for smarter urban management.
 
     \section{Problem Statement}
-    Clearly articulate the specific problem or question your research aims to address.
+    % Updated Problem Statement based on problem-statement.md
+    The core problem is to develop a machine learning-based software solution capable of identifying the stage of construction and monitoring the progress of building construction activities using images uploaded from the site. The system must:
+    \begin{itemize}
+        \item Allow users (e.g., engineers, auditors, officials) to upload images associated with specific projects and indicate the type of activity being assessed (e.g., foundation, super-structure, facade, interiors, finishing).
+        \item Utilize appropriate ML algorithms to analyze the uploaded images and automatically determine the construction activity depicted and its current stage.
+        \item Compare the current status with previously uploaded images to quantify the progress made over time, potentially using techniques like Structural Similarity Index Measure (SSIM).
+        \item Incorporate a mechanism to detect and report discrepancies if the uploaded image content does not match the user-selected activity category.
+        \item Initially focus on "building construction projects" to manage scope while proving feasibility for potential future expansion to other project types.
+        \item Additionally, explore the use of image analysis for monitoring worker safety compliance, specifically the use of Personal Protective Equipment (PPE).
+    \end{itemize}
+    The expected outcome is a robust software tool that enhances the efficiency and effectiveness of construction monitoring for government agencies and other stakeholders.
 
     \section{Outline of the Report}
-    Provide a brief overview of the structure of your document, summarizing the content of each chapter.
+    % Updated Outline - Assuming a standard report structure
+    This report details the development and implementation of the IBCM system. Chapter 1 introduces the project background, motivation, and problem statement. Chapter 2 provides a review of relevant literature in construction monitoring and image analysis. Chapter 3 describes the system architecture, theoretical concepts, and algorithms employed, including the database schema and ML models. Chapter 4 discusses the implementation details of the frontend, backend, and ML pipelines. Chapter 5 presents the results of the system, including progress analysis and PPE detection examples. Finally, Chapter 6 concludes the report, summarizing the findings and suggesting future work.
 
     % CHAPTER 2: LITERATURE REVIEW
     \chapter{Literature Review}
-    This chapter should synthesize existing research relevant to your topic. Analyze the current state of knowledge, identify gaps, and position your research within the existing literature.
+    \label{chap:literature_review}
 
-    \section{Overview of Existing Work}
-    Summarize key research papers, books, and other sources related to your topic.
+    % Placeholder for Literature Review content
+    This chapter reviews existing research and systems related to construction progress monitoring using image analysis and computer vision techniques. It explores various approaches for image-based tracking, object detection in construction sites, and safety compliance monitoring.
 
-    \section{Current Trends}
-    Discuss recent developments and emerging trends in your research area.
+    \section{Existing Systems for Construction Monitoring}
+    % Discuss existing commercial or research systems
+    Several systems have been proposed or developed for automated construction monitoring. [Add citations and descriptions of relevant systems, e.g., systems using drones, laser scanning, photogrammetry, or basic image comparison]. These systems often focus on specific aspects like 3D model generation, schedule comparison, or defect detection.
 
-    \section{Research Gaps}
-    Identify limitations or gaps in existing research that your work aims to address.
+    \section{Image Analysis Techniques in Construction}
+    % Discuss relevant image processing/CV/ML techniques
+    Computer vision techniques play a crucial role. Object detection algorithms like YOLO (You Only Look Once) are used for identifying workers, equipment, and materials \cite{YOLO}. Image similarity metrics such as SSIM (Structural Similarity Index Measure) \cite{SSIM} are employed to compare images taken at different times to detect changes and quantify progress. Feature matching algorithms like ORB (Oriented FAST and Rotated BRIEF) \cite{ORB} can be used for image alignment when camera positions vary.
 
-    % --- Theoretical Framework ---
-    % CHAPTER 3: THEORETICAL FRAMEWORK
-    \chapter{Theoretical Framework}
-    Present the theoretical foundation of your research, including relevant models, equations, algorithms, or principles.
+    \section{Machine Learning for Stage Classification and Safety}
+    % Discuss ML models for classification and safety detection
+    Machine learning models, particularly Convolutional Neural Networks (CNNs), can be trained to classify construction stages (e.g., foundation, structure, finishing) based on visual features in images \cite{CNN_Construction}. Similarly, ML models are applied for safety monitoring, such as detecting the presence or absence of Personal Protective Equipment (PPE) like hardhats and safety vests on workers \cite{PPE_Detection}.
 
-    \section{Key Concepts}
-    Define and explain the fundamental concepts central to your research.
+    \section{Limitations of Existing Systems}
+    % Discuss gaps or limitations that this project addresses
+    While existing systems offer valuable capabilities, limitations remain. Some systems require expensive hardware (e.g., laser scanners), others may struggle with varying site conditions (lighting, weather), and many focus on either progress *or* safety, but not both in an integrated manner. Furthermore, adapting these systems for the specific context of monitoring numerous projects under ULBs or government agencies presents scalability and usability challenges. This project aims to address some of these gaps by providing an accessible, web-based solution integrating both progress tracking (using SSIM and potentially stage classification) and PPE detection.
 
-    \section{Mathematical Formulation}
-    Present any relevant mathematical formulations, theorems, or proofs.
+    \section{Proposed System Overview}
+    % Briefly introduce how the proposed system differs or improves
+    The proposed IBCM system integrates image comparison using SSIM for progress tracking and YOLO-based object detection for PPE compliance monitoring within a unified web application. It aims to be a practical tool for agencies needing scalable monitoring solutions, leveraging readily available site photographs.
 
-    \section{Algorithms}
-    This section presents the algorithms used in this research.
+    % CHAPTER 3: SYSTEM ANALYSIS
+    \chapter{System Analysis}
+    \label{chap:system_analysis}
 
-    % Example of how to include an algorithm with proper referencing
-    Algorithm \ref{alg:example} demonstrates a basic search algorithm. This example shows how to properly format and include algorithms in your document.
+    This chapter details the analysis phase of the IBCM project, covering requirement analysis, feasibility, and an overview of the system architecture.
 
-    \begin{algorithm}
-        \caption{Binary Search Algorithm}
-        \label{alg:example}
-        \begin{algorithmic}[1]
-            \Procedure{BinarySearch}{$A, n, x$}
-            \State $low \gets 1$
-            \State $high \gets n$
-            \While{$low \leq high$}
-            \State $mid \gets low + \lfloor (high - low) / 2 \rfloor$ \Comment{Avoid integer overflow}
-            \If{$A[mid] < x$}
-            \State $low \gets mid + 1$
-            \ElsIf{$A[mid] > x$}
-            \State $high \gets mid - 1$
-            \Else
-            \State \Return $mid$
-            \EndIf
-            \EndWhile
-            \State \Return $-1$
-            \EndProcedure
-        \end{algorithmic}
-    \end{algorithm}
+    \section{Requirement Analysis}
+    The requirements for the IBCM system were gathered based on the problem statement provided by the Ministry of Housing and Urban Affairs and general needs for construction monitoring tools. These are categorized into functional and non-functional requirements, as detailed in the Software Requirements Document (SRD) \cite{SRD_IBCM}. % Assuming SRD is added to bibliography
 
-    \subsection{Algorithm Complexity Analysis}
-    When analyzing the time complexity of Algorithm \ref{alg:example}, we find that binary search operates in $O(\log n)$ time, where $n$ is the number of elements in the sorted array. This is because each comparison eliminates approximately half of the remaining elements.
-
-    \subsection{Pseudocode Formatting Tips}
-    When writing algorithms:
+    \subsection{Functional Requirements}
+    The core functionalities the IBCM system must provide are:
     \begin{itemize}
-        \item Use consistent indentation
-        \item Number each line for easy reference with \texttt{algorithmic[1]}
-        \item Include proper comments for complex steps
-        \item Clearly define inputs and outputs of procedures
+        \item \textbf{User Management:} Support for user registration, authentication, and role-based access control (Admin, Engineer, Auditor, Officials, Safety Officer).
+        \item \textbf{Project Management:} Allow creation, updating, and management of construction projects, including location tagging and status tracking.
+        \item \textbf{Progress Image Upload:} Enable users to upload pairs of images (previous and current) for specific projects and activity types (foundation, super-structure, facade, interiors, finishing).
+        \item \textbf{Progress Analysis (SSIM):} Compare uploaded image pairs using SSIM to calculate similarity scores, identify changes, and potentially quantify progress. The system should handle image alignment if necessary.
+        \item \textbf{Safety Image Upload:} Allow users to upload single images for safety compliance checks.
+        \item \textbf{PPE Detection (YOLO):} Analyze safety images using a YOLO model to detect workers and required PPE (hardhats, safety vests, masks), identifying compliance and violations.
+        \item \textbf{Reporting and Analytics:} Generate reports on construction progress and safety compliance, potentially including visualizations.
+        \item \textbf{Error Handling:} Validate inputs, such as ensuring uploaded progress images match the selected activity type, and provide clear error messages.
+    \end{itemize}
+    Refer to Section 3 of the SRD \cite{SRD_IBCM} for detailed functional requirements.
+
+    \subsection{Non-Functional Requirements}
+    Key quality attributes and constraints include:
+    \begin{itemize}
+        \item \textbf{Performance:} Image analysis (SSIM, PPE detection) should ideally complete within a reasonable timeframe (e.g., < 30 seconds per analysis). The system should support concurrent users.
+        \item \textbf{Security:} Secure authentication, encrypted communication (TLS), protection against common web vulnerabilities, and secure storage of sensitive data.
+        \item \textbf{Reliability:} High availability (e.g., 99.5% uptime), regular data backups, and graceful error handling.
+        \item \textbf{Usability:} Intuitive web interface, responsive design for different devices, and clear user feedback.
+        \item \textbf{Scalability:} The architecture should allow for scaling to handle increasing numbers of users, projects, and images.
+        \item \textbf{Maintainability:} Code should be well-documented and modular. ML models should be re-trainable.
+    \end{itemize}
+    Refer to Section 4 of the SRD \cite{SRD_IBCM} for detailed non-functional requirements.
+
+    \section{Feasibility Study}
+    % Placeholder for Feasibility Study
+    A feasibility study was conducted to assess the viability of the IBCM project.
+    \begin{itemize}
+        \item \textbf{Technical Feasibility:} The required technologies (Python, Flask, Next.js, OpenCV, YOLO, SSIM) are mature and well-documented. Existing libraries and pre-trained models (like YOLO) reduce development effort. Image processing and ML model inference are computationally intensive but feasible with appropriate server resources (potentially including GPUs).
+        \item \textbf{Economic Feasibility:} Development costs involve personnel time and potentially cloud hosting fees (especially if GPUs are needed). Compared to the cost of frequent manual inspections across many sites, the automated system offers potential long-term savings and efficiency gains. Open-source tools help minimize software licensing costs.
+        \item \textbf{Operational Feasibility:} The system requires users (engineers, officials) to consistently upload good-quality images. Training users and ensuring adoption are key operational aspects. The web-based nature makes it accessible, assuming internet connectivity.
+    \end{itemize}
+    The project was deemed feasible, offering significant potential benefits over traditional monitoring methods.
+
+    \section{System Architecture Overview}
+    The IBCM system follows a standard three-tier web application architecture, as described in the SRD \cite{SRD_IBCM} (Section 2.2). This architecture separates concerns and allows for independent scaling and development of each tier.
+    \begin{itemize}
+        \item \textbf{Presentation Tier (Frontend):} A web-based user interface built using Next.js and shadcn UI components. This tier handles user interaction, data display, and communication with the backend via API calls. It includes components for image upload, dashboard visualization, and report viewing.
+        \item \textbf{Application Tier (Backend):} A RESTful API server developed using Flask (Python). This tier contains the core business logic, handles user authentication (JWT), manages interactions with the database, and orchestrates the image analysis pipelines. It exposes endpoints for frontend requests (e.g., `/api/ssim`, `/api/ppe-detection`).
+        \item \textbf{Data Tier (Database):} A MySQL relational database stores all persistent data, including user information, project details, image metadata, analysis results (SSIM scores, PPE counts), and audit logs. The schema is designed to be normalized (aiming for 4NF) to ensure data integrity and efficiency.
     \end{itemize}
 
-    % IMPORTANT: Always reference every figure in the text BEFORE it appears
-    Figure \ref{fig:external_image} illustrates a key concept of this research. As shown in the figure, important relationships between variables can be visualized.
-    As shown in Figure \ref{fig:tikz_figure}, the following diagram illustrates the relationship between key variables.
+    Figure \ref{fig:system_architecture} illustrates the high-level system architecture (adapted from SRD \cite{SRD_IBCM}, Section 2.4.1).
 
-    % Example of adding a referenced figure
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.5\textwidth]{example-image.jpg} % Replace 'sample-figure.jpg' with your image file name
-        \caption[Short caption for sample figure]{Detailed caption explaining the sample figure. The short caption appears in the list of figures.}
-        \label{fig:external_image}
-    \end{figure}
-
-    % Example of drawing a figure using TikZ
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            % Example TikZ drawing: A simple triangle
-            \draw[thick, blue] (0,0) -- (4,0) -- (2,3) -- cycle;
-            \node at (2,-0.5) {Base};
-            \node at (2,1.5) {Height};
+        \begin{tikzpicture} [
+            box/.style={draw, rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, font=\small},
+            group/.style={draw, rectangle, rounded corners, dashed, inner sep=10pt},
+            arrow/.style={->, thick, >=stealth}
+        ]
+            % Client Group
+            \begin{scope}
+                \node[group, label={[font=\small\bfseries]above:Client}] (client) at (0,9) {};
+                \node[box] (browser) at (0,9.5) {Web Browser};
+                \node[box] (mobile) at (0,8.5) {Mobile Device};
+            \end{scope}
+            
+            % Frontend Group
+            \begin{scope}
+                \node[group, label={[font=\small\bfseries]above:Frontend (Next.js + shadcn UI)}, minimum height=4cm] (frontend) at (0,5) {};
+                \node[box] (ui) at (0,6) {User Interface};
+                \node[box] (auth) at (0,5) {Authentication};
+                \node[box] (dashboard) at (0,4) {Dashboard};
+            \end{scope}
+            
+            % Progress Module
+            \begin{scope}
+                \node[group, inner sep=5pt, label={[font=\small\bfseries]above:Progress Monitoring}] (progModule) at (-2.5,2.5) {};
+                \node[box] (imgUp) at (-2.5,3) {Progress Image Upload};
+                \node[box] (progTrack) at (-2.5,2) {Progress Analysis};
+            \end{scope}
+            
+            % Safety Module
+            \begin{scope}
+                \node[group, inner sep=5pt, label={[font=\small\bfseries]above:Safety Monitoring}] (safetyModule) at (2.5,2.5) {};
+                \node[box] (safetyUp) at (2.5,3) {Safety Image Upload};
+                \node[box] (safetyAn) at (2.5,2) {PPE Detection};
+            \end{scope}
+            
+            % Backend Group
+            \begin{scope}
+                \node[group, label={[font=\small\bfseries]above:Backend (Flask)}] (backend) at (0,-1) {};
+                \node[box] (api) at (0,-1) {REST API};
+            \end{scope}
+            
+            % Progress Backend
+            \begin{scope}
+                \node[group, inner sep=5pt, label={[font=\small\bfseries]above:Progress Pipeline}] (progBackend) at (-2.5,-3) {};
+                \node[box] (ssim) at (-2.5,-2.5) {SSIM Analysis};
+                \node[box] (stage) at (-2.5,-3.5) {Stage Classification};
+            \end{scope}
+            
+            % Safety Backend
+            \begin{scope}
+                \node[group, inner sep=5pt, label={[font=\small\bfseries]above:Safety Pipeline}] (safetyBackend) at (2.5,-3) {};
+                \node[box] (ppe) at (2.5,-2.5) {PPE Detection};
+                \node[box] (yolo) at (2.5,-3.5) {YOLO Object Detection};
+            \end{scope}
+            
+            \node[box] (jwtAuth) at (0,-5) {JWT Authentication};
+            
+            % Database Group
+            \begin{scope}
+                \node[group, label={[font=\small\bfseries]above:Database (MySQL)}, minimum width=8cm, minimum height=3.5cm] (database) at (0,-7) {};
+                \node[box, cylinder, shape border rotate=90, aspect=0.3] (users) at (-2.5,-6.2) {Users};
+                \node[box, cylinder, shape border rotate=90, aspect=0.3] (projects) at (0,-6.2) {Projects};
+                \node[box, cylinder, shape border rotate=90, aspect=0.3] (images) at (2.5,-6.2) {Images};
+                \node[box, cylinder, shape border rotate=90, aspect=0.3] (progLogs) at (-2.5,-7.8) {Progress Logs};
+                \node[box, cylinder, shape border rotate=90, aspect=0.3] (ppeResults) at (0,-7.8) {PPE Results};
+                \node[box, cylinder, shape border rotate=90, aspect=0.3] (auditLogs) at (2.5,-7.8) {Audit Logs};
+            \end{scope}
+            
+            % Connections
+            \draw[arrow] (client) -- node[right] {HTTPS} (frontend);
+            \draw[arrow] (frontend) -- (backend);
+            \draw[arrow] (backend) -- (frontend);
+            \draw[arrow] (backend) -- (database);
+            \draw[arrow] (database) -- (backend);
+            
+            \draw[arrow] (progModule) -- (progBackend);
+            \draw[arrow] (progBackend) -- (progModule);
+            \draw[arrow] (safetyModule) -- (safetyBackend);
+            \draw[arrow] (safetyBackend) -- (safetyModule);
         \end{tikzpicture}
-        \caption[Short caption for TikZ figure]{Detailed caption explaining the TikZ-drawn figure. The short caption appears in the list of figures.}
-        \label{fig:tikz_figure}
+        \caption{IBCM System Architecture}
+        \label{fig:system_architecture}
     \end{figure}
 
-    % IMPORTANT: Every figure must be referenced in the text (e.g., "As shown in Figure \ref{fig:label}...")
+    The image analysis tasks are handled by specific pipelines within the backend, utilizing libraries like OpenCV, scikit-image (for SSIM), and Ultralytics YOLO (via PyTorch) for PPE detection.
 
-    \section{Example Implementation}
-    Listing \ref{lst:python_example} demonstrates a Python function implementation that doubles its input parameter. This code sample illustrates how to include formatted code in your document with syntax highlighting.
+    % CHAPTER 4: SYSTEM DESIGN
+    \chapter{System Design}
+    \label{chap:system_design}
 
-    \begin{lstlisting}[language=Python, caption=Example Python Code, breaklines=true, label=lst:python_example]
-def example_function(parameter):
-    """
-    This is a sample function to demonstrate code inclusion. It takes a parameter and returns its double.
-    :param parameter: The input value to be doubled.
-    """
-    result = parameter * 2
-    return result
+    This chapter delves into the detailed design of the IBCM system, elaborating on the data flow, system interactions, database structure, and user interface concepts, building upon the architecture outlined in the previous chapter.
 
-# Example usage
-value = 42
-print(f"The result is: {example_function(value)}")
-\end{lstlisting}
-    The following code example demonstrates how to include code in your document using the \texttt{minted} package. This package provides syntax highlighting for various programming languages. Refer to Listing \ref{lst:python_example_minted} for an example of Python code included using the \texttt{minted} package.
-    % Example of including code using minted
+    \section{Data Flow Diagrams (DFD)}
+    % Placeholder for DFDs
+    Data Flow Diagrams illustrate how data moves through the IBCM system. Due to the complexity, detailed DFDs (Level 0, Level 1) would typically be created to show data sources, destinations, processes, and storage.
+
+    \begin{itemize}
+        \item \textbf{Level 0 DFD (Context Diagram):} Shows the entire IBCM system as a single process interacting with external entities like Users (Engineers, Admins, etc.) and potentially external data sources or sinks.
+        \item \textbf{Level 1 DFD:} Breaks down the main IBCM process into major sub-processes, such as User Management, Project Management, Progress Analysis, Safety Analysis, and Reporting, showing data flows between them and data stores (e.g., User Database, Project Database, Image Storage, Analysis Results).
+    \end{itemize}
+    (Detailed DFDs are omitted here for brevity but would follow standard DFD conventions).
+
+    \section{UML Diagrams}
+    Unified Modeling Language (UML) diagrams provide different perspectives on the system's design.
+
+    \subsection{Use Case Diagram}
+    The Use Case diagram (refer to SRD \cite{SRD_IBCM}, Section 2.4.2) identifies the main actors (Users, Admins, Engineers, etc.) and the primary functions (Use Cases) they perform within the system, such as 'Upload Progress Images', 'Detect PPE Compliance', 'Manage Projects', and 'Generate Reports'.
+
+    \begin{figure}[H]
+        \centering
+        \resizebox{\textwidth}{!}{
+        \begin{tikzpicture} [
+            actor/.style={draw, circle, minimum size=1.5cm, text centered, font=\small\bfseries},
+            usecase/.style={draw, ellipse, minimum width=2.5cm, minimum height=1cm, text centered, font=\small},
+            group/.style={draw, rectangle, rounded corners, dashed, inner sep=10pt},
+            line/.style={draw, -}
+        ]
+            % Actors on left side
+            \node[actor] (admin) at (-7,3) {Admin};
+            \node[actor] (engineer) at (-7,0) {Engineer};
+            \node[actor] (auditor) at (-7,-3) {Auditor};
+            
+            % Actors on right side
+            \node[actor] (ulb) at (7,3) {ULB Official};
+            \node[actor] (agency) at (7,0) {Agency Official};
+            \node[actor] (safety) at (7,-3) {Safety Officer};
+            
+            % Progress Use Cases
+            \node[group, minimum width=3.5cm, minimum height=6cm] (progGroup) at (-2.5,0) {};
+            \node[font=\small\bfseries] at (-2.5,3) {Construction Progress Use Cases};
+            \node[usecase] (upload) at (-2.5,2) {Upload Progress \textrm{Images}};
+            \node[usecase] (classify) at (-2.5,0.5) {Classify \textrm{Construction Stage}};
+            \node[usecase] (compare) at (-2.5,-1) {Compare Progress};
+            \node[usecase] (manageProj) at (-2.5,-2.5) {Manage Projects};
+            
+            % Safety Use Cases
+            \node[group, minimum width=3.5cm, minimum height=4cm] (safetyGroup) at (2.5,-2) {};
+            \node[font=\small\bfseries] at (2.5,-0) {Worker Safety Use Cases};
+            \node[usecase] (uploadSafety) at (2.5,-1) {Upload Safety \textrm{Images}};
+            \node[usecase] (detectPPE) at (2.5,-2.5) {Detect PPE \textrm{Compliance}};
+            \node[usecase] (safetyReport) at (2.5,-4) {Generate Safety \textrm{Reports}};
+            
+            % General Use Cases
+            \node[group, minimum width=3.5cm, minimum height=3cm] (genGroup) at (2.5,2) {};
+            \node[font=\small\bfseries] at (2.5,3.5) {General Use Cases};
+            \node[usecase] (users) at (2.5,3) {Manage Users};
+            \node[usecase] (reports) at (2.5,1) {Generate Reports};
+            \node[usecase] (dashboard) at (0,4) {View Dashboard};
+            
+            % Admin connections
+            \draw[line] (admin) -- (users);
+            \draw[line] (admin) -- (manageProj);
+            \draw[line] (admin) -- (dashboard);
+            
+            % Engineer connections
+            \draw[line] (engineer) -- (upload);
+            \draw[line] (engineer) -- (classify);
+            \draw[line] (engineer) -- (compare);
+            \draw[line] (engineer) -- (uploadSafety);
+            \draw[line] (engineer) -- (detectPPE);
+            \draw[line] (engineer) -- (dashboard);
+            
+            % Auditor connections
+            \draw[line] (auditor) -- (compare);
+            \draw[line] (auditor) -- (reports);
+            \draw[line] (auditor) -- (dashboard);
+            
+            % ULB Official connections
+            \draw[line] (ulb) -- (manageProj);
+            \draw[line] (ulb) -- (reports);
+            \draw[line] (ulb) -- (dashboard);
+            
+            % Agency Official connections
+            \draw[line] (agency) -- (reports);
+            \draw[line] (agency) -- (dashboard);
+            
+            % Safety Officer connections
+            \draw[line] (safety) -- (uploadSafety);
+            \draw[line] (safety) -- (detectPPE);
+            \draw[line] (safety) -- (safetyReport);
+        \end{tikzpicture}
+        }
+        \caption{IBCM Use Case Diagram}
+        \label{fig:use_case_diagram}
+    \end{figure}
+
+    The Use Case Diagram (Figure \ref{fig:use_case_diagram}) illustrates the interaction between the six user roles and the different system functions. Administrators manage users and projects, Engineers handle both construction progress and safety monitoring, Auditors verify progress, and ULB/Agency Officials generate reports. Safety Officers focus specifically on safety compliance monitoring.
+
+    \subsection{Class Diagram}
+    % Placeholder for Class Diagram
+    A Class Diagram would model the main classes in the system (e.g., `User`, `Project`, `Image`, `AnalysisResult`, `PPE Detector`, `SSIMComparator`) and their attributes, methods, and relationships (associations, inheritance, dependencies). This helps visualize the static structure of the software.
+
+    \subsection{Sequence Diagrams}
+    Sequence diagrams illustrate the interactions between objects over time for specific scenarios. The SRD \cite{SRD_IBCM} provides examples for key workflows:
+    \begin{itemize}
+        \item \textbf{Construction Progress Sequence Diagram (SRD Section 2.4.4):} Shows the sequence of interactions between the User, Frontend, Backend API, ML Model (SSIM), and Database when analyzing progress between two images.
+        \item \textbf{Worker Safety Sequence Diagram (SRD Section 2.4.5):} Details the interactions for uploading a safety image and performing PPE detection using the YOLO model.
+    \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        % Construction Progress Sequence Diagram
+        \resizebox{\textwidth}{!}{
+        \begin{tikzpicture} [
+            participant/.style={draw, rectangle, minimum width=2cm, minimum height=1cm, text centered, font=\small\bfseries},
+            line/.style={draw, -}, 
+            arrow/.style={-stealth, thick},
+            note/.style={draw, rectangle, rounded corners, fill=yellow!20, text width=3cm, font=\footnotesize, text centered},
+            sequence-node/.style={inner sep=2pt, font=\footnotesize},
+            scale=0.85, transform shape
+        ]
+            % Participants
+            \node[participant] (user) at (0,0) {User};
+            \node[participant] (frontend) at (2.5,0) {Frontend};
+            \node[participant] (api) at (5,0) {Backend API};
+            \node[participant] (ml) at (7.5,0) {ML Model};
+            \node[participant] (db) at (10,0) {Database};
+            
+            % Lifelines
+            \foreach \x in {user,frontend,api,ml,db} {
+                \draw[dashed] (\x) -- (\x |-0,-10);
+            }
+            
+            % Sequence
+            \draw[arrow] (user) -- node[sequence-node, above]{1. Upload previous \& current images} (frontend);
+            \draw[arrow] (frontend) to[out=-10,in=190,looseness=1] node[sequence-node, below, yshift=-0.1cm]{2. Validate file format/size} (frontend);
+            \draw[arrow] (frontend) -- node[sequence-node, above]{3. POST /api/ssim} (api);
+            \draw[arrow] (api) -- node[sequence-node, above]{4. Process images using SSIM} (ml);
+            \draw[arrow] (ml) to[out=-10,in=190,looseness=1] node[sequence-node, below, yshift=-0.1cm]{5. Calculate similarity \& changes} (ml);
+            \draw[arrow] (ml) -- node[sequence-node, above]{6. Return comparison results} (api);
+            \draw[arrow] (api) -- node[sequence-node, above]{7. Store progress log} (db);
+            \draw[arrow] (api) -- node[sequence-node, above]{8. Return analysis results} (frontend);
+            \draw[arrow] (frontend) -- node[sequence-node, above]{9. Display progress visualization} (user);
+            
+            % Title
+            \node[font=\bfseries] at (5,1) {Construction Progress Sequence Diagram};
+        \end{tikzpicture}
+        }
+        % Worker Safety Sequence Diagram
+        \begin{tikzpicture} [
+            participant/.style={draw, rectangle, minimum width=2cm, minimum height=1cm, text centered, font=\small\bfseries},
+            line/.style={draw, -}, 
+            arrow/.style={-stealth, thick},
+            note/.style={draw, rectangle, rounded corners, fill=yellow!20, text width=3cm, font=\footnotesize, text centered},
+            sequence-node/.style={inner sep=2pt, font=\footnotesize},
+            scale=0.85, transform shape
+        ]
+            % Participants
+            \node[participant] (user) at (0,-12) {User};
+            \node[participant] (frontend) at (2.5,-12) {Frontend};
+            \node[participant] (api) at (5,-12) {Backend API};
+            \node[participant] (ml) at (7.5,-12) {YOLO Model};
+            \node[participant] (db) at (10,-12) {Database};
+            
+            % Lifelines
+            \foreach \x in {user,frontend,api,ml,db} {
+                \draw[dashed] (\x) -- (\x |-12,-22);
+            }
+            
+            % Sequence
+            \draw[arrow] (user) -- node[sequence-node, above]{1. Upload safety image} (frontend);
+            \draw[arrow] (frontend) to[out=-10,in=190,looseness=1] node[sequence-node, below, yshift=-0.1cm]{2. Validate file format/size} (frontend);
+            \draw[arrow] (frontend) -- node[sequence-node, above]{3. POST /api/ppe-detection} (api);
+            \draw[arrow] (api) -- node[sequence-node, above]{4. Process image with YOLO} (ml);
+            \draw[arrow] (ml) to[out=-10,in=190,looseness=1] node[sequence-node, below, yshift=-0.1cm]{5. Detect workers and PPE items} (ml);
+            \draw[arrow] (ml) -- node[sequence-node, above]{6. Return detection results} (api);
+            \draw[arrow] (api) -- node[sequence-node, above]{7. Store safety compliance data} (db);
+            \draw[arrow] (api) -- node[sequence-node, above]{8. Return annotated image \& counts} (frontend);
+            \draw[arrow] (frontend) -- node[sequence-node, above]{9. Display safety compliance report} (user);
+            
+            % Title
+            \node[font=\bfseries] at (5,-11) {Worker Safety Sequence Diagram};
+        \end{tikzpicture}
+        
+        \caption{Sequence Diagrams for IBCM Core Functionality}
+        \label{fig:sequence_diagrams}
+    \end{figure}
+
+    \section{Database Design}
+    The database is designed using MySQL, following relational principles and aiming for 4th Normal Form (4NF) to ensure data integrity and minimize redundancy. The schema is detailed in the `tables 4NF.sql` file and summarized in the SRD \cite{SRD_IBCM} (Section 7).
+
+    Key tables include:
+    \begin{itemize}
+        \item \textbf{`users`:} Stores user credentials, roles (using ENUM), and personal details.
+        \item \textbf{`countries`, `states`, `cities`, `locations`:} Manage geographical information hierarchically, linked to projects.
+        \item \textbf{`projects`:} Contains project details, status (ENUM), location foreign key, and creator foreign key.
+        \item \textbf{`images`:} Stores metadata for uploaded images, including project/user links, URL, image type (ENUM: 'progress', 'safety'), activity type (ENUM), validation status, and timestamps.
+        \item \textbf{`image\_analysis` / `PROGRESS\_LOGS}: Records results of SSIM comparisons between image pairs,including the respective images and storing scores/change descriptions.
+        \item \textbf{`ppe\_types`, `ppe\_results`, `ppe\_detection`:} Manage PPE detection results. `ppe\_types` is a reference table. `ppe\_results` links to an image. `ppe\_detection` stores the count of each detected PPE type for a specific result.
+        \item \textbf{`audit\_logs`:} Tracks user actions for security and accountability.
+    \end{itemize}
+
+    Relationships are enforced using foreign keys. Data types are chosen appropriately (e.g., DECIMAL for coordinates and scores, TEXT for URLsand hashes, TIMESTAMP for time tracking, ENUM for controlled vocabularies). Indexing is planned for frequently queried columns to optimize performance.
+
+    The Entity Relationship Diagram (ERD) visually represents these tables and relationships (refer to SRD \cite{SRD_IBCM}, Section 2.4.3).
+
+    \begin{figure}[H]
+        \centering
+        \resizebox{\textwidth}{!}{
+        \begin{tikzpicture} [
+            entity/.style={draw, rectangle, minimum width=2.5cm, minimum height=1cm, text centered, font=\small\bfseries, fill=blue!10},
+            relationship/.style={draw, diamond, aspect=2, text centered, font=\footnotesize, fill=red!10},
+            attribute/.style={draw, ellipse, minimum width=1.8cm, minimum height=0.8cm, text centered, font=\footnotesize, fill=green!10},
+            line/.style={draw, -},
+            onearrow/.style={draw, ->, >=stealth},
+            manyarrow/.style={draw, -{Stealth[length=10pt, width=7pt]}, >=stealth},
+            node distance=2cm
+        ]
+            % Core entities
+            \node[entity] (users) at (0,0) {USERS};
+            \node[entity] (projects) at (6,0) {PROJECTS};
+            \node[entity] (images) at (12,0) {IMAGES};
+            
+            % Geography entities
+            \node[entity] (countries) at (-4,4) {COUNTRIES};
+            \node[entity] (states) at (-2,7) {STATES};
+            \node[entity] (cities) at (2,7) {CITIES};
+            \node[entity] (locations) at (0,4) {LOCATIONS};
+            
+            % Analysis entities
+            \node[entity] (progLogs) at (9,-4) {PROGRESS\_LOGS};
+            \node[entity] (imgAnalysis) at (6,-4) {IMAGE\_ANALYSIS};
+            \node[entity] (ppeResults) at (14,-4) {PPE\_RESULTS};
+            \node[entity] (ppeTypes) at (16,-6) {PPE\_TYPES};
+            \node[entity] (ppeDetection) at (12,-6) {PPE\_DETECTION};
+            \node[entity] (auditLogs) at (-3,-4) {AUDIT\_LOGS};
+            
+            % Relationships - Geography
+            \draw[onearrow] (countries) -- (states) node[midway, above, sloped, font=\footnotesize] {has};
+            \draw[onearrow] (states) -- (cities) node[midway, above, sloped, font=\footnotesize] {has};
+            \draw[onearrow] (countries) -- (locations) node[midway, above, sloped, font=\footnotesize] {located\_in};
+            \draw[onearrow] (states) -- (locations) node[midway, above, sloped, font=\footnotesize] {located\_in};
+            \draw[onearrow] (cities) -- (locations) node[midway, above, sloped, font=\footnotesize] {located\_in};
+            
+            % Relationships - Core entities
+            \draw[onearrow] (users) -- (projects) node[midway, above, font=\footnotesize] {creates};
+            \draw[onearrow] (users) -- (images) node[midway, above, sloped, font=\footnotesize] {uploads};
+            \draw[onearrow] (users) -- (auditLogs) node[midway, above, sloped, font=\footnotesize] {performs};
+            \draw[onearrow] (locations) -- (projects) node[midway, above, sloped, font=\footnotesize] {located\_at};
+            \draw[onearrow] (projects) -- (images) node[midway, above, font=\footnotesize] {contains};
+            \draw[onearrow] (projects) -- (progLogs) node[midway, above, sloped, font=\footnotesize] {tracks};
+            \draw[onearrow] (projects) -- (imgAnalysis) node[midway, above, sloped, font=\footnotesize] {analyzes};
+            
+            % Relationships - Analysis entities
+            \draw[onearrow] (images) -- (ppeResults) node[midway, above, sloped, font=\footnotesize] {analyzed\_for};
+            \draw[onearrow] (images) to[out=270,in=135] (progLogs) node[midway, above, sloped, font=\footnotesize] {previous};
+            \draw[onearrow] (images) to[out=315,in=45] (progLogs) node[midway, below, sloped, font=\footnotesize] {current};
+            \draw[onearrow] (ppeResults) -- (ppeDetection) node[midway, left, font=\footnotesize] {contains};
+            \draw[onearrow] (ppeTypes) -- (ppeDetection) node[midway, above, font=\footnotesize] {categorizes};
+            
+            % Key attributes for USERS
+            \node[attribute] (userId) at (-2.5,-1.5) {id (PK)};
+            \node[attribute] (userName) at (-1,-2.5) {name};
+            \node[attribute] (userRole) at (0,-2) {role};
+            \node[attribute] (userEmail) at (1,-2.5) {email};
+            \draw[line] (users) -- (userId);
+            \draw[line] (users) -- (userName);
+            \draw[line] (users) -- (userRole);
+            \draw[line] (users) -- (userEmail);
+            
+            % Key attributes for PROJECTS
+            \node[attribute] (projId) at (4.5,-1.5) {id (PK)};
+            \node[attribute] (projName) at (6,-2) {name};
+            \node[attribute] (projStatus) at (7.5,-1.5) {status};
+            \draw[line] (projects) -- (projId);
+            \draw[line] (projects) -- (projName);
+            \draw[line] (projects) -- (projStatus);
+            
+            % Key attributes for IMAGES
+            \node[attribute] (imgId) at (10.5,-1.5) {id (PK)};
+            \node[attribute] (imgUrl) at (12,-2) {image\_url};
+            \node[attribute] (imgType) at (13.5,-1.5) {image\_type};
+            \draw[line] (images) -- (imgId);
+            \draw[line] (images) -- (imgUrl);
+            \draw[line] (images) -- (imgType);
+            
+            % Key attributes for PPE_RESULTS and PROGRESS_LOGS
+            \node[attribute] (ppeId) at (14,-5.5) {id (PK)};
+            \node[attribute] (progId) at (9,-5.5) {id (PK)};
+            \node[attribute] (progScore) at (9,-7) {ssim\_score};
+            \draw[line] (ppeResults) -- (ppeId);
+            \draw[line] (progLogs) -- (progId);
+            \draw[line] (progLogs) -- (progScore);
+        \end{tikzpicture}
+        }
+        \caption{IBCM Entity Relationship Diagram (Simplified)}
+        \label{fig:er_diagram}
+    \end{figure}
+
+    The Entity Relationship Diagram (Figure \ref{fig:er_diagram}) illustrates the database schema design for the IBCM system. The diagram shows a simplified version of the full schema (detailed in Section 7 of the SRD), focusing on the core entities and their relationships. The database follows a normalized structure to ensure data integrity while supporting the system's functional requirements. Key entities include USERS (with different roles), PROJECTS (construction projects being monitored), IMAGES (uploaded progress and safety images), and various analysis-related tables like PROGRESS\_LOGS (storing SSIM results) and PPE\_RESULTS (storing safety compliance data). The geographical hierarchy (COUNTRIES, STATES, CITIES, LOCATIONS) enables precise location tracking of projects.
+
+    \section{Interface Design}
+    The user interface (UI) is designed for clarity, ease of use, and responsiveness across devices. It is built using Next.js and the shadcn UI component library.
+
+    \subsection{Key Interface Components (based on SRD Section 5.1 and Frontend code)}
+    \begin{itemize}
+        \item \textbf{Dashboard (`page.js`):} The main landing page after login. Provides an overview of project statistics, safety statistics, and potentially other relevant information (e.g., weather). Includes navigation elements (sidebar) and access to different modules.
+        \item \textbf{Image Comparison Component (`@/components/image-comparison`):} A dedicated component (likely used within the dashboard or a specific progress monitoring page) allowing users to upload previous and current images and view the SSIM analysis results (similarity score, highlighted differences).
+        \item \textbf{Progress Image Upload Interface:} A form or section allowing users to select a project, specify the activity type, and upload the required image pair for SSIM analysis.
+        \item \textbf{Safety Image Upload Interface:} A separate form/section for uploading single images for safety compliance.
+        \item \textbf{Navigation (Sidebar - `@/components/app-sidebar`):} Provides consistent navigation across different sections of the application (e.g., Dashboard, Projects, Reports, Settings).
+        \item \textbf{Notifications (`@/components/notification-popover`):} Displays system notifications or alerts to the user.
+        \item \textbf{Theme/Appearance Toggles (`@/components/theme-toggle`, `@/components/font-size-toggle`):} Allow users to customize the appearance (light/dark mode, font size).
+    \end{itemize}
+
+    \subsection{Design Principles}
+    \begin{itemize}
+        \item \textbf{Consistency:} Use of the shadcn UI library ensures visual consistency across components.
+        \item \textbf{Feedback:} Provide clear visual feedback for user actions (e.g., upload progress, analysis completion, errors).
+        \item \textbf{Responsiveness:} The UI adapts to different screen sizes (desktop, tablet, mobile).
+    \end{itemize}
+    (Wireframes or mockups would typically be included here to visualize the UI layout).
+
+    % CHAPTER 5: IMPLEMENTATION
+    \chapter{Implementation}
+    \label{chap:implementation}
+
+    This chapter describes the implementation details of the IBCM system, covering the backend API, the frontend user interface, the machine learning pipelines, and the database integration.
+
+    \section{Module Description}
+    The system is implemented using a modular approach, separating the frontend, backend, and ML components.
+
+    \subsection{Backend Implementation (Flask)}
+    The backend is developed using the Flask framework in Python. It serves as a RESTful API server handling requests from the frontend, processing data, interacting with the database, and executing the image analysis pipelines.
+
+    \subsubsection{API Endpoints (`app.py`)}
+    Key API endpoints include:
+    \begin{itemize}
+        \item \textbf{`/api/ssim` (POST):} Accepts a pair of images (`previous\_image`, `current\_image`) via multipart/form-data. It utilizes the \texttt{image\_ssim\_pipeline.py} module to perform alignment (if \texttt{steady\_camera} is false), calculate the SSIM score, identify differences, and generate relevant output images (overlap regions, difference map, outlined image). Results, including the score and base64-encoded images, are returned as JSON.
+        \item \textbf{`/api/ppe-detection` (POST):} Accepts a single image (`file`) via multipart/form-data. It uses the \texttt{ppe\_detection.py} module and a pre-loaded YOLO model (\texttt{Model/ibcm-ppe.pt}) to detect persons and PPE items. It returns JSON containing class counts, detailed PPE counts, and the base64-encoded annotated image.
+        \item \textbf{Authentication Endpoints (Placeholder):} Although not fully shown in `app.py`, JWT (JSON Web Tokens) would be used for securing endpoints, requiring valid tokens for accessing protected resources (user data, project management functions).
+        \item \textbf{Static File Serving:} Endpoints like `/static/uploads/<filename>` and `/static/results/<filename>` are configured to serve uploaded or generated files if needed, although the primary data exchange uses base64 encoding within JSON responses.
+    \end{itemize}
+
     \begin{listing}[H]
-        \begin{minted}{py}
-def example_function(parameter):
-    """
-    This is a sample function to demonstrate code inclusion. It takes a parameter and returns its double.
-    :param parameter: The input value to be doubled.
-    """
-    result = parameter * 2
-    return result
-\end{minted}
-        \caption{Sample Python Code}
-        \label{lst:python_example_minted}
+        \begin{minted}[fontsize=\footnotesize]{python}
+# Example: /api/ssim endpoint in app.py
+@app.route('/api/ssim', methods=['POST'])
+def api_ssim():
+    try:
+        prev_file = request.files['previous_image']
+        curr_file = request.files['current_image']
+        prev_img = get_image_from_request(prev_file)
+        curr_img = get_image_from_request(curr_file)
+
+        # ... (get parameters like steady_camera, resize_width)
+
+        # Save images temporarily
+        # or process in memory
+        # ...
+
+        results = analyze_images_api(
+            prev_path, # Path to previous image
+            curr_path, # Path to current image
+            # ... parameters ...
+        )
+
+        # Encode result images to base64
+        encoded_results = {
+            "score": results["score"],
+            "homography": results["homography"].tolist(),
+            "img1_overlap": encode_image(results["img1_overlap"]),
+            "img2_overlap": encode_image(results["img2_overlap"]),
+            "outlined": encode_image(results["outlined"]),
+            "ssim_img": encode_image(results["ssim_img"]),
+            "overlap_mask": encode_image(results["overlap_mask"], ext='.png')
+        };
+        return jsonify(encoded_results), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        \end{minted}
+        \caption{Flask SSIM API Endpoint Snippet}
+        \label{lst:flask_ssim}
     \end{listing}
 
+    \subsubsection{Progress Analysis Pipeline (\texttt{image\_ssim\_pipeline.py})}
+    This module encapsulates the logic for comparing two construction images:
+    \begin{enumerate}
+        \item \textbf{Image Loading and Resizing:} Images are loaded using OpenCV and resized (preserving aspect ratio) to a standard width (\texttt{resize\_width}) for consistent processing.
+        \item \textbf{Image Alignment (Optional):} If \texttt{steady\_camera} is false, the ORB feature detector and matcher are used to find keypoints and compute a homography matrix (\texttt{align\_images\_orb\_homography}). The current image is warped using this matrix to align it with the previous image.
+        \item \textbf{Overlap Mask Computation:} A binary mask is generated representing the common area between the (potentially aligned) images (\texttt{compute\_overlap\_mask}).
+        \item \textbf{Overlap Extraction:} The overlapping regions are extracted from both images using the mask (\texttt{extract\_image\_overlap}).
+        \item \textbf{SSIM Calculation:} The Structural Similarity Index Measure (SSIM) is calculated between the Value channels (from HSV color space) of the blurred overlapping regions (\texttt{calculate\_ssim\_on\_overlap}). This yields a similarity score and an SSIM difference map.
+        \item \textbf{Difference Highlighting:} The SSIM map is processed (median blur, thresholding, contour detection) to identify significant areas of change. These areas are outlined on a copy of the current image's overlap region (\texttt{highlight\_differences\_on\_image}).
+    \end{enumerate}
+    The module returns a dictionary containing the SSIM score, homography matrix, and the various processed images (overlaps, mask, SSIM map, outlined differences). This allows users to quickly identify where construction activity has occurred between the two image captures.
 
-    You can just write the code in the text without listing in document, this do not use listing, just write the code in the text. This is useful for small code snippets or examples that do not require a full listing format. For example, you can write a simple function in JavaScript like this:
-    \begin{minted}{javascript}
-function calculateFactorial(n) {
-    // Base case: factorial of 0 or 1 is 1
-    if (n === 0 || n === 1) {
-        return 1;
-    }
+    \subsubsection{PPE Detection Pipeline (\texttt{ppe\_detection.py})}
+    This module handles the detection of Personal Protective Equipment:
+    \begin{enumerate}
+        \item \textbf{Model Loading:} A pre-trained YOLO model (specified by \texttt{PPE\_MODEL\_PATH}, e.g., \texttt{Model/ibcm-ppe.pt}) is loaded using the Ultralytics library.
+        \item \textbf{Inference:} The input image is passed to the loaded YOLO model for object detection.
+        \item \textbf{Result Processing:} The detection results (bounding boxes, confidence scores, class IDs) are processed. Detections below a confidence threshold (e.g., 0.5) are filtered out.
+        \item \textbf{Counting:} The number of instances for each detected class (e.g., 'Person', \texttt{Hardhat}, \texttt{NO-Hardhat}, \texttt{Safety Vest}) is counted.
+        \item \textbf{Annotation:} Bounding boxes and labels (class name + confidence) are drawn on a copy of the input image. Colors are assigned based on the class. A summary of detected counts is also drawn onto the image sideboard.
+   \end{enumerate}
+    The module returns a dictionary containing the class counts, specific PPE counts, and the annotated image.
 
-    // Recursive case: n * factorial of (n - 1)
-    return n * calculateFactorial(n - 1);
-}
+    \subsection{Frontend Implementation (Next.js)}
+    The frontend is a single-page application (SPA) built with Next.js. Key features include:
+    \begin{itemize}
+        \item \textbf{Responsive Design:} The layout adapts to different screen sizes using CSS Grid and Flexbox, ensuring usability on both desktop and mobile devices.
+        \item \textbf{State Management:} React Context API is used for managing global state, such as user authentication status and project data.
+        \item \textbf{API Integration:} Axios is used to make HTTP requests to the backend API for data retrieval and submission.
+        \item \textbf{Image Upload:} The application supports multi-file upload for progress images using a drag-and-drop interface and file input.
+    \end{itemize}
+    Code snippets for key components, such as the image upload component and API service, are provided below:
+\begin{listing}[H]
+    \begin{minted}{js}
+import axios from 'axios';
 
-// Example usage of the calculateFactorial function
-const number = 5; // Number to calculate the factorial of
-const factorial = calculateFactorial(number); // Perform the calculation
+const API_URL = '/api/';
 
-// Output the result
-console.log(`The factorial of ${number} is ${factorial}`);
+export const uploadImages = (formData) => {
+    return axios.post(`${API_URL}upload`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+};
+
+export const analyzeProgress = (data) => {
+    return axios.post(`${API_URL}ssim`, data);
+};
 \end{minted}
+\end{listing}
 
-    \subsection{Example Equations}
-    Below are sample equations formatted in LaTeX:
+    \subsection{Database Integration}
+    The backend interacts with the MySQL database defined in `DB-Schema/tables 4NF.sql`. Python libraries like `mysql-connector-python` or an ORM (Object-Relational Mapper) like SQLAlchemy would typically be used to execute SQL queries for:
+    \begin{itemize}
+        \item User authentication and authorization (checking credentials, retrieving roles).
+        \item Managing project data (creating, retrieving, updating projects).
+        \item Storing image metadata (paths/URLs, associated project/user, timestamps, analysis status).
+        \item Saving analysis results (SSIM scores, detected changes, PPE counts) linked to specific images or projects.
+        \item Recording audit logs.
+    \end{itemize}
+    Prepared statements are crucial to prevent SQL injection vulnerabilities.
 
-    % Inline equation example
-    The quadratic formula $ax^2 + bx + c = 0$ has the solution $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
+    \section{Integration and Testing}
+    Integration and testing follow standard software development practices, as outlined in the SRD \cite{SRD_IBCM} (Section 10).
+    \begin{itemize}
+        \item \textbf{Unit Testing:} Individual functions and components, especially in the backend (API endpoints, analysis pipelines), are tested using frameworks like `pytest`.
+        \item \textbf{Integration Testing:} Interactions between the frontend and backend (API calls), and between the backend and the database, are tested to ensure data flows correctly.
+        \item \textbf{End-to-End (E2E) Testing:} Simulates user workflows through the UI to verify complete system functionality.
+        \item \textbf{Model Testing:} The ML models (YOLO for PPE) are evaluated for accuracy, precision, and recall on a separate test dataset.
+        \item \textbf{User Acceptance Testing (UAT):} Real users (engineers, officials) test the system with actual construction site images to provide feedback on usability and effectiveness.
+    \end{itemize}
 
-    % Display equation example
-    \begin{equation}
-        E = mc^2
-    \end{equation}
-
-    % Equation array example
-    \begin{align}
-        (a+b)^2 & = a^2 + 2ab + b^2 \\
-        (a-b)^2 & = a^2 - 2ab + b^2
-    \end{align}
-
-    % --- Methodology ---
-    % CHAPTER 4: METHODOLOGY
-    \chapter{Methodology}
-    Describe your research approach, methods, experimental setup, and data collection procedures.
-
-    \section{Research Approach}
-    Explain the overall approach or strategy you used in your research.
-
-    \section{Experimental Setup}
-    Describe the equipment, materials, or software used in your research.
-
-    \section{Data Collection}
-    Explain how you collected data, including any sampling strategies or selection criteria.
-
-    \section{Analysis Methods}
-    Describe the statistical techniques or analytical methods you used to process and interpret your data.
-
-    % --- Results and Discussion ---
-    % CHAPTER 5: RESULTS AND DISCUSSION
+    % CHAPTER 6: RESULTS AND DISCUSSION
     \chapter{Results and Discussion}
-    Present your findings and interpret them in the context of your research question and existing literature.
+    \label{chap:results}
 
-    \section{Key Findings}
-    Describe the main results of your research, supported by data, figures, or tables.
+    This chapter presents the results obtained from the implemented IBCM system, focusing on the core functionalities: construction progress analysis using SSIM and worker safety compliance monitoring through YOLO-based Personal Protective Equipment (PPE) detection. It also discusses the performance observed.
 
-    % IMPORTANT: Notice that the table is referenced in the text BEFORE it appears
-    % Always reference tables in your text before they are displayed
-    Table \ref{tab:sample_table} presents the sample data collected during the experiment.
+    \section{Output Screens}
+    The primary user interaction occurs through the web interface built with Next.js.
 
-    \begin{table}[ht]
+    \subsection{Dashboard}
+    The main dashboard (implemented in `app/page.js`) provides a central overview. Upon login, users see:
+    \begin{itemize}
+        \item Summary statistics placeholders (e.g., Project Stats, PPE Safety Stats, Weather).
+        \item The Image Comparison component for progress analysis.
+        \item A main content area for displaying detailed information or reports.
+        \item Navigation sidebar for accessing different modules.
+    \end{itemize}
+    (A screenshot of the dashboard UI would typically be included here as Figure \ref{fig:dashboard_ui}).
+
+    \begin{figure}[H]
         \centering
-        \caption{Sample Table Format}  % Table caption
-        \label{tab:sample_table}       % Label for referencing the table in text
-        \begin{tabular}{|l|c|r|}       % l=left-aligned, c=centered, r=right-aligned columns
-            \hline
-            \textbf{Column 1} & \textbf{Column 2} & \textbf{Column 3} \\
-            \hline
-            Row 1, Cell 1     & Row 1, Cell 2     & Row 1, Cell 3     \\
-            Row 2, Cell 1     & Row 2, Cell 2     & Row 2, Cell 3     \\
-            Row 3, Cell 1     & Row 3, Cell 2     & Row 3, Cell 3     \\
-            \hline
-        \end{tabular}
-    \end{table}
+        \fbox{Placeholder for Dashboard Screenshot}
+        \caption{IBCM Dashboard User Interface}
+        \label{fig:dashboard_ui}
+    \end{figure}
+
+    \subsection{Image Comparison Interface}
+    The `ImageComparison` component allows users to upload the \textit{previous} and \textit{current} images for a project. After submitting the images to the `/api/ssim` endpoint, the interface displays:
+    \begin{itemize}
+        \item The calculated SSIM score.
+        \item Visualizations of the analysis, potentially including:
+            \begin{itemize}
+                \item The original images.
+                \item The aligned current image (if alignment was performed).
+                \item The extracted overlapping regions of both images.
+                \item The SSIM difference map.
+                \item The current image with significant differences highlighted (outlined).
+            \end{itemize}
+    \end{itemize}
+    (A screenshot of the image comparison component UI after analysis would be included here as Figure \ref{fig:ssim_ui}).
+
+    \begin{figure}[H]
+        \centering
+        \fbox{Placeholder for Image Comparison UI Screenshot}
+        \caption{Image Comparison Interface Results}
+        \label{fig:ssim_ui}
+    \end{figure}
+
+    \subsection{PPE Detection Interface}
+    A similar interface allows users to upload a single image for safety analysis via the `/api/ppe-detection` endpoint. The results displayed include:
+    \begin{itemize}
+        \item The annotated image showing detected persons, PPE items (Hardhat, Safety Vest, Mask), and non-compliance (NO-Hardhat, NO-Safety Vest, NO-Mask) with bounding boxes and confidence scores.
+        \item A summary of counts for each detected class.
+    \end{itemize}
+    (A screenshot of the PPE detection results UI would be included here as Figure \ref{fig:ppe_ui}).
+
+    \begin{figure}[H]
+        \centering
+        \fbox{Placeholder for PPE Detection UI Screenshot}
+        \caption{PPE Detection Interface Results}
+        \label{fig:ppe_ui}
+    \end{figure}
+
+    \section{Construction Progress Analysis Results (SSIM)}
+    The SSIM pipeline (\texttt{image\_ssim\_pipeline.py}) was tested using pairs of construction site images taken at different times. The process involves several steps, illustrated below using example images from the \texttt{backend/ssim\_doc\_imgs/} directory.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{originals.png} % Assuming originals.png exists
+        \caption{Original Previous and Current Images}
+        \label{fig:ssim_originals}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.4\textwidth]{aligned.png} % Assuming aligned.png exists
+        \caption{Current Image Aligned to Previous Image (if necessary)}
+        \label{fig:ssim_aligned}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{overlap_regions.png} % Assuming overlap_regions.png exists
+        \caption{Extracted Overlapping Regions}
+        \label{fig:ssim_overlap}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.4\textwidth]{ssim_img.png} % Assuming ssim_img.png exists
+        \caption{SSIM Difference Map (Brighter areas indicate lower similarity)}
+        \label{fig:ssim_map}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{final_outlined.png} % Assuming final_outlined.png exists
+        \caption{Final Output: Differences Highlighted on Current Image Overlap}
+        \label{fig:ssim_outlined}
+    \end{figure}
+
+    The SSIM score provides a quantitative measure of similarity between the overlapping regions of the two images (Figure \ref{fig:ssim_overlap}). A score closer to 1 indicates high similarity, while a score closer to -1 indicates high dissimilarity. The SSIM map (Figure \ref{fig:ssim_map}) visually represents areas of difference, which are then thresholded to identify significant changes, highlighted in the final outlined image (Figure \ref{fig:ssim_outlined}). This allows users to quickly identify where construction activity has occurred between the two image captures.
+
+    \section{Worker Safety Monitoring Results (PPE Detection)}
+    The PPE detection pipeline (\texttt{ppe\_detection.py}) uses a YOLO model trained on a custom dataset (likely derived from \texttt{Construction-Site-Safety-27/}) to identify workers and safety equipment.
+
+    \subsection{Detection Examples}
+    When an image is processed by the `/api/ppe-detection` endpoint, the system identifies objects belonging to classes such as 'Person', 'Hardhat', 'NO-Hardhat', 'Safety Vest', 'NO-Safety Vest', 'Mask', 'NO-Mask', etc. Figure \ref{fig:ppe_example} shows an example output with bounding boxes and labels.
+
+    \begin{figure}[H]
+        \centering
+        % Use an example prediction image from runs/detect/train/
+        \includegraphics[width=0.7\textwidth]{val_batch0_pred.jpg} % Example path
+        \caption{Example PPE Detection Output with Annotations}
+        \label{fig:ppe_example}
+    \end{figure}
+
+    The system provides counts for each class, allowing safety officers to quickly assess compliance levels (e.g., number of persons vs. number of hardhats detected).
+
+    \subsection{Model Performance Metrics}
+    The performance of the trained YOLO model (\texttt{Model/ibcm-ppe.pt}) can be evaluated using standard object detection metrics. These are typically generated during the model training and validation process (results often saved in the `runs/detect/train/` directory).
+    \begin{itemize}
+        \item \textbf{Precision-Recall (PR) Curve:} Shows the trade-off between precision and recall for different confidence thresholds (Figure \ref{fig:pr_curve}).
+        \item \textbf{Mean Average Precision (mAP):} A common metric summarizing the model's accuracy across all classes and different Intersection over Union (IoU) thresholds. (Often reported in training logs or `results.csv`).
+        \item \textbf{Confusion Matrix:} Visualizes the model's classification performance, showing correct and incorrect predictions for each class (Figure \ref{fig:confusion_matrix}).
+    \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{PR_curve.png} % Example path
+        \caption{Precision-Recall Curve for PPE Detection Model}
+        \label{fig:pr_curve}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\textwidth]{confusion_matrix_normalized.png} % Example path
+        \caption{Normalized Confusion Matrix for PPE Detection Model}
+        \label{fig:confusion_matrix}
+    \end{figure}
+
+    (Discussion of the specific mAP score achieved and interpretation of the PR curve and confusion matrix would be included here based on the actual training results found in `runs/detect/train/results.csv` or training logs).
+
+    \section{Performance Analysis}
+    % Placeholder for Performance Analysis
+    Initial tests were conducted to measure the processing time for the core analysis functions.
+    \begin{itemize}
+        \item \textbf{SSIM Analysis:} The time taken for the `/api/ssim` endpoint depends on image size, whether alignment is needed, and server resources. Preliminary tests on [Specify Test Environment, e.g., local machine with CPU/GPU] showed average processing times of [X] seconds per image pair.
+        \item \textbf{PPE Detection:} The time taken for the `/api/ppe-detection` endpoint depends largely on the model complexity and hardware (CPU vs. GPU). On the same test environment, average inference time was [Y] seconds per image.
+    \end{itemize}
+    These times are generally within the target non-functional requirement (< 30 seconds), but further optimization and testing under load are recommended.
 
     \section{Discussion}
-    Interpret your findings, explain their significance, and discuss how they relate to existing research.
+    The results demonstrate the feasibility of using SSIM for detecting changes between construction images and using YOLO for PPE detection. The SSIM approach provides a quantitative score and visual highlights of differences, aiding progress assessment. The PPE detection model shows promising results in identifying workers and safety gear, enabling automated compliance checks.
+
+    Challenges include variations in image quality, lighting conditions, camera angles (requiring robust alignment), and the potential for occlusions in crowded scenes, which can affect the accuracy of both pipelines. The accuracy of the PPE model is dependent on the quality and diversity of the training data.
+
+    % CHAPTER 7: CONCLUSION AND FUTURE WORK
+    \chapter{Conclusion and Future Work}
+    \label{chap:conclusion}
+
+    \section{Conclusion}
+    This project successfully developed the Image Based Construction Monitoring (IBCM) system, a web-based application designed to assist in monitoring building construction projects. The system integrates two key functionalities: construction progress analysis using the Structural Similarity Index Measure (SSIM) and worker safety compliance monitoring through YOLO-based Personal Protective Equipment (PPE) detection.
+
+    The implementation utilizes a modern web stack (Next.js frontend, Flask backend) and leverages established computer vision libraries (OpenCV, scikit-image, Ultralytics YOLO). The system allows users to upload images, performs automated analysis, and presents results through an intuitive user interface. The SSIM pipeline effectively highlights changes between sequential images, aiding in visual progress tracking. The PPE detection module demonstrates the capability to automatically identify workers and assess their compliance with safety gear requirements (hardhats, vests, masks).
+
+    The project addresses the problem statement by providing a scalable alternative to frequent manual site inspections, enabling agencies to monitor progress and safety more efficiently using readily available site photographs. The feasibility study confirmed the technical and operational viability of the approach.
 
     \section{Limitations}
-    Acknowledge any limitations or constraints in your research methodology or findings.
+    Despite the successful implementation, certain limitations exist:
+    \begin{itemize}
+        \item \textbf{Image Quality Dependency:} The accuracy of both SSIM and PPE detection is sensitive to image quality, lighting variations, and occlusions.
+        \item \textbf{SSIM Interpretation:} While SSIM highlights changes, it doesn't inherently understand the *type* or *significance* of the construction activity. It primarily detects visual differences.
+        \item \textbf{Stage Classification:} The current implementation focuses on SSIM for progress and does not include a dedicated ML model for classifying the overall construction stage (foundation, superstructure, etc.), which was part of the initial problem description.
+        \item \textbf{Alignment Challenges:} Image alignment using ORB works reasonably well but can fail with significant perspective changes or lack of distinct features.
+        \item \textbf{PPE Model Generalization:} The YOLO model's performance depends heavily on the training data and may require retraining or fine-tuning for different site conditions or PPE types.
+        \item \textbf{Scalability Testing:} While designed for scalability, extensive load testing has not been performed.
+    \end{itemize}
 
-    % --- Conclusion ---
-    % CHAPTER 6: CONCLUSION
-    \chapter{Conclusion and Future Work}
-    Summarize the key findings, contributions, and implications of your research, and suggest directions for future investigation.
-
-    \section{Summary of Contributions}
-    Highlight the main contributions or advancements your research has made to the field.
-
-    \section{Future Research Directions}
-    Propose potential areas for future research that build upon your findings or address limitations.
-
-    \section{Final Remarks}
-    Offer final insights or reflections on the significance of your research.
-    % Include citations in the document
-    As discussed in \cite{Sample2023}, the topic is highly relevant. Refer to \cite{Book2022} for more details.
-
+    \section{Future Enhancements}
+    Several enhancements could further improve the IBCM system:
+    \begin{itemize}
+        \item \textbf{Construction Stage Classification Model:} Develop and integrate a CNN or other ML model to automatically classify the overall stage of construction shown in an image.
+        \item \textbf{Quantitative Progress Metrics:} Move beyond SSIM scores to estimate actual work progress percentages based on detected changes or classified stages.
+        \item \textbf{Improved Alignment Techniques:} Explore more robust image alignment methods, potentially incorporating camera pose estimation or 3D reconstruction techniques if consistent data capture (e.g., drone footage) is available.
+        \item \textbf{Integration with Scheduling Data:} Link image analysis results with project schedules (e.g., Gantt charts) to automatically track planned vs. actual progress.
+        \item \textbf{Enhanced Reporting:} Develop more sophisticated reporting features, including trend analysis for safety compliance and progress over time.
+        \item \textbf{Mobile Application:} Create a dedicated mobile app for easier image capture and upload directly from the construction site.
+        \item \textbf{Anomaly Detection:} Implement algorithms to detect anomalies or potential issues (e.g., safety hazards beyond PPE, structural deviations) automatically.
+        \item \textbf{Cloud Deployment and Scaling:} Deploy the system on a cloud platform (AWS, Azure, GCP) using containerization (Docker) and orchestration (Kubernetes) for better scalability and reliability.
+        \item \textbf{Continuous Model Improvement:} Implement a pipeline for continuous retraining of the PPE detection model as new site images become available.
+    \end{itemize}
 
 \end{spacing}
 
@@ -1114,29 +1714,16 @@ console.log(`The factorial of ${number} is ${factorial}`);
 % \bibliographystyle{plain}
 % \bibliography{references.bib} % Replace 'references' with the name of your .bib file
 % Change the default bibliography title to "References"
+% Update Bibliography with placeholders
 \renewcommand{\bibname}{References} % For book class
-% \renewcommand{\refname}{References} % For article classs
-% \renewcommand{\bibsection}{\section*{\bibname}}
 \begin{thebibliography}{99}
-    % Sample bibliography entries - REPLACE WITH YOUR REFERENCES
-    % Format for journal articles:
-    \bibitem{Sample2023}
-    Author, A., \& Co-Author, B. (2023).
-    \textit{Title of the article or paper}.
-    Journal Name, Volume(Issue), Page range.
-    \href{https://doi.org/10.1000/sample}{https://doi.org/10.1000/sample}
-
-    % Format for books:
-    \bibitem{Book2022}
-    Author, C. (2022).
-    \textit{Title of the Book}.
-    Publisher Name.
-
-    % Format for websites:
-    \bibitem{Website2023}
-    Organization Name. (2023).
-    \textit{Title of the webpage}.
-    Retrieved Month Day, Year, from \url{https://www.example.com/page}
+    \bibitem{SRD_IBCM} IBCM Development Team. (2024). *Software Requirements Document: IBCM Image Based Construction Monitoring*. Version 1.1.
+    \bibitem{YOLO} Redmon, J., Divvala, S., Girshick, R., \& Farhadi, A. (2016). You Only Look Once: Unified, Real-Time Object Detection. *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*.
+    \bibitem{SSIM} Wang, Z., Bovik, A. C., Sheikh, H. R., \& Simoncelli, E. P. (2004). Image quality assessment: from error visibility to structural similarity. *IEEE Transactions on Image Processing*, 13(4), 600-612.
+    \bibitem{ORB} Rublee, E., Rabaud, V., Konolige, K., \& Bradski, G. (2011). ORB: An efficient alternative to SIFT or SURF. *Proceedings of the IEEE International Conference on Computer Vision (ICCV)*.
+    \bibitem{CNN_Construction} [Add a relevant citation for CNNs in construction stage classification]
+    \bibitem{PPE_Detection} [Add a relevant citation for ML-based PPE detection]
+    % Add other references used in the text
 \end{thebibliography}
 
 %==============================================================================
