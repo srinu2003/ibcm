@@ -35,11 +35,7 @@ const ImageUpload = () => {
     formData.append('current_image', currentImage);
 
     try {
-<<<<<<< HEAD
       const response = await axios.post(`http://7pxr530l-5000.inc1.devtunnels.ms/api/ssim`, formData, {
-=======
-      const response = await axios.post(`http://https://7pxr530l-5000.inc1.devtunnels.ms/api/ssim`, formData, {
->>>>>>> de41ef12a818a5cf4da9f81080b35c4ad8906fd1
         headers: {
           'Content-Type': 'multipart/form-data',
         },
