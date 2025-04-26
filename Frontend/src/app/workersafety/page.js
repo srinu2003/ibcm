@@ -53,7 +53,11 @@ function SafetyCompliance() {
             const formData = new FormData();
             formData.append('file', selectedFile);
 
+<<<<<<< HEAD
             const response = await fetch('http://7pxr530l-5000.inc1.devtunnels.ms/api/ppe-detection', {
+=======
+            const response = await fetch('http://https://7pxr530l-5000.inc1.devtunnels.ms/api/ppe-detection', {
+>>>>>>> de41ef12a818a5cf4da9f81080b35c4ad8906fd1
                 method: 'POST',
                 body: formData,
             });
