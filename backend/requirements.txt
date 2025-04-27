@@ -2,7 +2,6 @@ flask
 ultralytics
 scikit-image
 flask_cors
-
 Werkzeug
 flask-cors
 pillow
@@ -12,3 +11,4 @@ python-dotenv
 roboflow
 matplotlib
 torch
+pyOpenSSL

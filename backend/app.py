@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 import base64
 import tempfile
+import ssl
 
 from image_ssim_pipeline import analyze_images_api
 from ppe_detection import detect_ppe
@@ -19,6 +20,10 @@ RESULT_FOLDER = './static/results/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 PPE_MODEL_PATH = os.getenv("PPE_MODEL_PATH", "Model/ibcm-ppe.pt")
+
+# SSL configuration
+SSL_CERT = os.getenv("SSL_CERT", "adhoc")  # Using 'adhoc' for auto-generated self-signed cert
+SSL_ENABLED = os.getenv("SSL_ENABLED", "true").lower() == "true"
 
 # Ensure upload/result folders exist at startup
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -132,4 +137,25 @@ def serve_result_image(filename):
     return send_from_directory(RESULT_FOLDER, filename)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if SSL_ENABLED:
+        # For auto-generated self-signed cert, use ssl_context='adhoc'
+        # For specific cert files, use ssl_context=(cert_file, key_file)
+        if SSL_CERT == "adhoc":
+            try:
+                from werkzeug.serving import make_ssl_devcert
+                cert_file, key_file = make_ssl_devcert('ssl-cert')
+                ssl_context = (cert_file, key_file)
+                print(f"Using generated SSL cert: {cert_file}")
+            except ImportError:
+                # If pyOpenSSL is not installed, fall back to 'adhoc'
+                print("Using adhoc SSL cert (install pyOpenSSL for better certs)")
+                ssl_context = 'adhoc'
+        else:
+            # Assuming SSL_CERT is a tuple or path to cert files
+            ssl_context = SSL_CERT
+        
+        print("Starting server with HTTPS enabled")
+        app.run(debug=True, ssl_context=ssl_context, host='0.0.0.0', port=5000)
+    else:
+        print("Starting server with HTTP only")
+        app.run(debug=True, host='0.0.0.0', port=5000)

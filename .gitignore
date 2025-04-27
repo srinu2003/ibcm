@@ -1,2 +1,8 @@
 *.bak
 *.vscode
+
+# SSL certificates
+ssl-cert*
+*.crt
+*.key
+*.pem

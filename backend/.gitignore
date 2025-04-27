@@ -8,3 +8,9 @@ Construction-Site-Safety-*/
 yolo*.pt
 sample.jpg
 output_image.jpg
+
+# SSL certificates
+ssl-cert*
+*.crt
+*.key
+*.pem
