@@ -9,9 +9,9 @@
 - 1.6 Organization of the Report  
 
 ## Chapter 2: Literature Survey / Review
-- 2.1 Existing Systems  
-- 2.2 Limitations of Existing Systems  
-- 2.3 Proposed System  
+- 2.1 Existing Systems
+- 2.2 Limitations of Existing Systems
+- 2.3 Proposed System
 - 2.4 Summary  
 
 ## Chapter 3: System Analysis

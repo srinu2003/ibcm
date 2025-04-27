@@ -265,18 +265,16 @@ erDiagram
         int id PK
         int image_id FK
         datetime detection_time
-    }
-    
-    PPE_DETECTION {
-        int id PK
-        int ppe_result_id FK
-        int ppe_type_id FK
-        int count
-    }
-    
-    PPE_TYPES {
-        int id PK
-        string name
+        int hardhat
+        int mask
+        int no_hardhat
+        int no_mask
+        int no_safety_vest
+        int person
+        int safety_cone
+        int safety_vest
+        int machinery
+        int vehicle
     }
     
     AUDIT_LOGS {
@@ -307,9 +305,6 @@ erDiagram
     IMAGES ||--o{ PPE_RESULTS : analyzed_for
     IMAGES ||--o{ PROGRESS_LOGS : previous
     IMAGES ||--o{ PROGRESS_LOGS : current
-    
-    PPE_RESULTS ||--o{ PPE_DETECTION : contains
-    PPE_TYPES ||--o{ PPE_DETECTION : categorizes
 ```
 
 ### 2.4.4 Construction Progress Sequence Diagram
@@ -530,53 +525,74 @@ The database schema includes the following key entities and their relationships:
    - Contains user account information including authentication credentials and role
    - Roles are stored as an ENUM ('admin', 'engineer', 'auditor', 'ulb_official', 'agency_official')
    - Each user may create multiple projects and upload multiple images
+   - Key fields: id (PK), name, username, email, password_hash, role, created_at
 
 2. **Location Hierarchy**
-   - **Countries**: Basic country information
-   - **States**: States/provinces within countries
-   - **Cities**: Cities within states
-   - **Locations**: Detailed location information including address, coordinates, and references to countries, states and cities
+   - **Countries**: Basic country information (id, name)
+   - **States**: States/provinces within countries, linked to country_id as FK
+   - **Cities**: Cities within states, linked to state_id as FK
+   - **Locations**: Detailed location information including address lines, postal code, and coordinates
+     - Contains foreign keys to cities, states, and countries
 
 3. **Projects**
    - Core project information including name, description, timeline, and status
-   - Linked to a specific location and the user who created it
+   - Linked to a specific location (FK) and the user who created it (created_by FK)
    - Status tracked as an ENUM ('planned', 'in_progress', 'completed', 'on_hold')
+   - Includes dates (start_date, end_date) and creation timestamp (created_at)
 
 4. **Images**
-   - Metadata about uploaded images including URL/path, type, and validity status
+   - Metadata about uploaded images including image_path, image_type, and validation status
    - Distinguished by image_type ENUM ('progress', 'safety')
    - Categorized by activity_type ENUM ('foundation', 'super_structure', 'facade', 'interiors', 'finishing')
-   - Associated with specific projects and users
+   - Associated with specific projects (project_id FK) and users (user_id FK)
+   - Includes validation fields (is_valid, error_message) and timestamp (uploaded_at)
 
 5. **Image Analysis**
    - Records of image comparisons performed for construction progress monitoring
-   - Stores paths to compared images, similarity scores, and detected changes
-   - Linked to specific projects
+   - Stores paths to compared images (previous_image_path, current_image_path)
+   - Contains similarity scores (ssim_score) and detected changes
+   - Linked to specific projects (project_id FK)
+   - Includes timestamp of analysis (analysis_time)
 
 6. **Progress Logs**
-   - Similar to Image Analysis but references specific image records
-   - Links previous and current images for tracking construction progress over time
+   - Similar to Image Analysis but references specific image records via FKs
+   - Links previous_image_id and current_image_id for tracking construction progress over time
    - Stores SSIM scores and detected changes
+   - Linked to projects (project_id FK)
+   - Includes timestamp of log creation (log_time)
 
-7. **PPE Detection System**
-   - **PPE Types**: Reference table of all PPE types that can be detected
-   - **PPE Results**: Records of PPE detection analysis performed on images
-   - **PPE Detection**: Detailed counts of each PPE type detected in an image
+7. **PPE Results**
+   - Records of PPE detection analysis performed on images
+   - Linked directly to an image record (image_id FK)
+   - Contains count fields for various PPE types:
+     - hardhat, mask, safety_vest
+     - no_hardhat, no_mask, no_safety_vest
+     - person, safety_cone, machinery, vehicle
+   - Includes timestamp of detection (detection_time)
 
 8. **Audit Logs**
    - Security audit trail of user actions within the system
-   - Records user ID, action performed, details, and timestamp
+   - Records user ID (user_id FK), action performed, details, and timestamp (action_time)
+   - Helps with security monitoring and troubleshooting
 
 ### 7.2 Data Requirements
-- User passwords shall be stored as secure hashes (TEXT datatype)
-- Location coordinates shall use DECIMAL data type with appropriate precision (latitude DECIMAL(10,8), longitude DECIMAL(11,8))
-- Similarity scores shall use DECIMAL(5,4) to store values between 0 and 1 with four decimal places
-- Image paths shall be stored as TEXT to accommodate varying path lengths
-- All tables shall include appropriate primary keys, using AUTO_INCREMENT for ID fields
-- Foreign key constraints shall be implemented to maintain referential integrity
-- TIMESTAMP data type shall be used for audit records and time-sensitive data
-- Appropriate indexing shall be implemented for frequently queried fields
-- ENUM types shall be used for fields with predefined value sets to ensure data consistency
+- User passwords are stored as secure hashes using TEXT datatype
+- Location coordinates use DECIMAL data type with appropriate precision:
+  - latitude DECIMAL(10,8)
+  - longitude DECIMAL(11,8)
+- Similarity scores use DECIMAL(5,4) to store values between 0 and 1 with four decimal places
+- Image paths are stored as TEXT to accommodate varying path lengths
+- All tables include primary keys, using AUTO_INCREMENT for ID fields
+- Foreign key constraints are implemented to maintain referential integrity
+- TIMESTAMP data type is used for audit records and time-sensitive data
+- Appropriate indexing is implemented on foreign keys and frequently queried fields:
+  - Unique indexes on username and email in the users table
+  - Indexes on all foreign key columns for efficient joins
+- ENUM types are used for fields with predefined value sets to ensure data consistency, including:
+  - User roles
+  - Project status
+  - Image types
+  - Activity types
 
 ---
 
