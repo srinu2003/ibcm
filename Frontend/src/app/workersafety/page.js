@@ -7,6 +7,7 @@ function SafetyCompliance() {
     const [result, setResult] = useState(null);
     const [imageName, setImageName] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     const fileInputRef = useRef(null);
 
     // Group detections into categories for better display
@@ -42,9 +43,10 @@ function SafetyCompliance() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setErrorMessage(null); // Clear any previous error messages
 
         if (!selectedFile) {
-            alert("Please select a file first.");
+            setErrorMessage("Please select a file first.");
             return;
         }
 
@@ -66,7 +68,7 @@ function SafetyCompliance() {
             setResult(data);
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to process image. Please try again.');
+            setErrorMessage('Failed to process image. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -89,6 +91,19 @@ function SafetyCompliance() {
             <div className={styles.card}>
                 <h1 className={styles.title}>Worker Safety Detection</h1>
                 <p className={styles.subtitle}>Upload an image to detect safety equipment compliance</p>
+
+                {errorMessage && (
+                    <div className={styles.errorMessage || 'error-message'} style={{
+                        backgroundColor: '#ffebee',
+                        color: '#c62828',
+                        padding: '10px 15px',
+                        borderRadius: '4px',
+                        margin: '15px 0',
+                        border: '1px solid #ef9a9a'
+                    }}>
+                        {errorMessage}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <label className={styles.fileInput}>
