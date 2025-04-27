@@ -10,6 +10,16 @@ function SafetyCompliance() {
     const [errorMessage, setErrorMessage] = useState(null);
     const fileInputRef = useRef(null);
 
+    // PPE detection upload instructions
+    const uploadInstructions = [
+        "Upload a single image of workers at the construction site",
+        "Supported formats: JPG, JPEG, PNG (max 10MB)",
+        "Ensure workers are clearly visible in the image",
+        "Good lighting conditions will improve detection accuracy",
+        "The system will detect safety equipment: hardhats, masks, and safety vests",
+        "Safety violations will be highlighted with red boundaries"
+    ];
+
     // Group detections into categories for better display
     const categorizeDetections = (detections) => {
         if (!detections) return { safety: [], violations: [], other: [] };
@@ -91,6 +101,15 @@ function SafetyCompliance() {
             <div className={styles.card}>
                 <h1 className={styles.title}>Worker Safety Detection</h1>
                 <p className={styles.subtitle}>Upload an image to detect safety equipment compliance</p>
+                
+                {/* Upload Instructions */}
+                <div className={styles.instructionsContainer}>
+                    <ul className={styles.instructionsList}>
+                        {uploadInstructions.map((instruction, index) => (
+                            <li key={index} className={styles.instructionItem}>{instruction}</li>
+                        ))}
+                    </ul>
+                </div>
 
                 {errorMessage && (
                     <div className={styles.errorMessage || 'error-message'} style={{

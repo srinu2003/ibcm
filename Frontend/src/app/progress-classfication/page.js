@@ -23,6 +23,16 @@ const ImageUpload = () => {
   const [advancedOptionsVisible, setAdvancedOptionsVisible] = useState(false);
   const [noiseThreshold, setNoiseThreshold] = useState(10); // Adding noise threshold
 
+  // Upload instructions based on backend requirements
+  const uploadInstructions = [
+    "Upload previous and current images of the same construction site.",
+    "Supported formats: JPG, JPEG, PNG (max 10MB per image).",
+    "For best results, take photos from the same angle and position.",
+    "Images should clearly show the construction area with good lighting.",
+    "Higher resolution images will provide more detailed analysis.",
+    "Enable 'Steady Camera' if both images were taken from the same position."
+  ];
+
   const handleImageChange = (e) => {
     if (e.target.name === 'previousImage') {
       setPreviousImage(e.target.files[0]);
@@ -91,6 +101,16 @@ const ImageUpload = () => {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <h1 className={styles.title}>Construction Progress Analysis</h1>
+        
+        {/* Upload Instructions */}
+        <div className={styles.instructionsContainer}>
+          <h3 className={styles.instructionsTitle}>Image Upload Guidelines</h3>
+          <ul className={styles.instructionsList}>
+            {uploadInstructions.map((instruction, index) => (
+              <li key={index} className={styles.instructionItem}>{instruction}</li>
+            ))}
+          </ul>
+        </div>
 
         {/* Modified upload container to display images side by side */}
         <div className={styles.uploadContainer}>
