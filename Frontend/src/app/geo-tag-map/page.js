@@ -11,7 +11,7 @@ const locations = [
     progress: 95,
     status: "green",
     stage: "Interior Finishing",
-    issue:"None,Work going on smoothly"
+    issue: "None,Work going on smoothly"
   },
   {
     name: "Infosys Pune Campus",
@@ -20,7 +20,7 @@ const locations = [
     progress: 75,
     status: "green",
     stage: "Super-structure",
-    issue:"None,Work going on smoothly"
+    issue: "None,Work going on smoothly"
   },
   {
     name: "Phoenix Palassio Mall, Lucknow",
@@ -29,7 +29,7 @@ const locations = [
     progress: 55,
     status: "yellow-orange",
     stage: "Façade work",
-    issue:"Minor issues, work is delayed by 2 weeks due to labour union strike"
+    issue: "Minor issues, work is delayed by 2 weeks due to labour union strike"
   },
   {
     name: "World One Tower, Mumbai",
@@ -38,7 +38,7 @@ const locations = [
     progress: 90,
     status: "yellow-orange",
     stage: "Final touches",
-    issue:"Minor issues, work is delayed by few days due to heavy rains "
+    issue: "Minor issues, work is delayed by few days due to heavy rains "
   },
   {
     name: "Phoenix Market City, Chennai",
@@ -47,7 +47,7 @@ const locations = [
     progress: 40,
     status: "red",
     stage: "Foundation",
-    issue:"Major issues, frequent delays due to some irregularity in the budget "
+    issue: "Major issues, frequent delays due to some irregularity in the budget "
   },
   {
     name: "Diamond Bourse, Ahmedabad",
@@ -56,7 +56,7 @@ const locations = [
     progress: 80,
     status: "green",
     stage: "Interior work",
-    issue:"None,Work going on smoothly"
+    issue: "None,Work going on smoothly"
   },
   {
     name: "East Riverfront Development, Kolkata",
@@ -65,7 +65,7 @@ const locations = [
     progress: 30,
     status: "red",
     stage: "Foundation work",
-    issue:"Major issues, work has been delayed by 2 months"
+    issue: "Major issues, work has been delayed by 2 months"
 
   },
   {
@@ -75,7 +75,7 @@ const locations = [
     progress: 60,
     status: "green",
     stage: "Exterior cladding",
-    issue:"None,Work going on smoothly"
+    issue: "None,Work going on smoothly"
   },
   {
     name: "Chennai Crest Towers",
@@ -84,7 +84,7 @@ const locations = [
     progress: 50,
     status: "yellow-orange",
     stage: "MEP installation",
-    issue:"Minor issues, work delayed by few days due to the weak quality of material used"
+    issue: "Minor issues, work delayed by few days due to the weak quality of material used"
   },
   {
     name: "Emaar Emerald Hills, Gurgaon",
@@ -93,7 +93,7 @@ const locations = [
     progress: 30,
     status: "red",
     stage: "Foundation",
-    issue:"Major issues, work has been stopped from last 3 months"
+    issue: "Major issues, work has been stopped from last 3 months"
   }
 ];
 
@@ -144,7 +144,7 @@ export default function GeoTagged() {
           </ul>
         </div>
       </div>
-      
+
       <div className={styles.mapContainer}>
         <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <GoogleMap

@@ -1,20 +1,21 @@
 "use client";
-import {  Box,
-    Grid,
-    Typography,
-    Paper,
-    Avatar,
-    List,
-    ListItem,
-    ListItemText,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Tabs,
-    Tab,
-    Card,
-    CardContent,
- } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Typography,
+  Paper,
+  Avatar,
+  List,
+  ListItem,
+  ListItemText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Tabs,
+  Tab,
+  Card,
+  CardContent,
+} from '@mui/material';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, Legend, ResponsiveContainer } from 'recharts';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
@@ -26,19 +27,19 @@ import React, { useState } from 'react';
 import styles from '../../styles/Dashboard.module.css';
 
 const userData = {
-    name: "Rahul Kumar",
-    email: "rahulkumar@example.com",
-    role: "Project Manager",
-    avatar: "/icons/profile.jpg",
-    projects: "3 Ongoing Projects",
-    ratings: 4.5
-  };
-  
-  const contractorData = [
-    { id: 1, name: "ABC Constructions", projects: 5, rating: 4.0, history: "Completed 5 large-scale projects, known for timely delivery." },
-    { id: 2, name: "XYZ Builders", projects: 3, rating: 3.5, history: "Experienced in residential buildings, delayed in one project." },
-  ];
-  
+  name: "Rahul Kumar",
+  email: "rahulkumar@example.com",
+  role: "Project Manager",
+  avatar: "/icons/profile.jpg",
+  projects: "3 Ongoing Projects",
+  ratings: 4.5
+};
+
+const contractorData = [
+  { id: 1, name: "ABC Constructions", projects: 5, rating: 4.0, history: "Completed 5 large-scale projects, known for timely delivery." },
+  { id: 2, name: "XYZ Builders", projects: 3, rating: 3.5, history: "Experienced in residential buildings, delayed in one project." },
+];
+
 const workProgressData = [
   { phase: 'Foundation', progress: 100 },
   { phase: 'Super Structure', progress: 80 },
@@ -64,17 +65,17 @@ const COLORS = ['#FF8042', '#00C49F'];
 
 export default function Dashboard() {
 
-    const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0);
 
-    const handleTabChange = (event, newValue) => {
-      setTabValue(newValue);
-    };
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
   return (
     <Box sx={{ padding: '2rem' }}>
       <Typography variant="h4" gutterBottom>Dashboard</Typography>
 
-     {/* User Profile Section */}
-     <Grid container spacing={4}>
+      {/* User Profile Section */}
+      <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Card className={styles.profileCard}>
             <CardContent>
@@ -115,10 +116,10 @@ export default function Dashboard() {
             </Box>
           </Card>
         </Grid>
-        </Grid>
+      </Grid>
       {/* Main Grid for Data Sections */}
       <Grid container spacing={4} sx={{ marginTop: '2rem' }}>
-        
+
         {/* Work Progress Section */}
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ padding: '1rem' }}>
@@ -166,8 +167,8 @@ export default function Dashboard() {
           </Paper>
         </Grid>
 
-         {/* Contractor Details */}
-         <Grid item xs={12} md={6}>
+        {/* Contractor Details */}
+        <Grid item xs={12} md={6}>
           <Typography variant="h6" gutterBottom>Contractor Details</Typography>
           {contractorData.map(contractor => (
             <Accordion key={contractor.id} sx={{ marginBottom: '1rem' }}>

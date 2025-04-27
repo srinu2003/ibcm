@@ -15,8 +15,8 @@
   max-width: 1200px;
 }
 
-.left, 
-.center, 
+.left,
+.center,
 .section {
   flex: 1;
   padding: 0 1rem;
@@ -37,13 +37,16 @@
 }
 
 .followUs {
-  margin-top: 2rem; /* Added margin to separate from content above */
-  text-align: center; /* Center text for consistency */
+  margin-top: 2rem;
+  /* Added margin to separate from content above */
+  text-align: center;
+  /* Center text for consistency */
 }
 
 .socialIcons {
   display: flex;
-  justify-content: center; /* Center social icons */
+  justify-content: center;
+  /* Center social icons */
   margin-top: 1rem;
 }
 
@@ -75,8 +78,8 @@
     flex-direction: column;
   }
 
-  .left, 
-  .center, 
+  .left,
+  .center,
   .section {
     padding: 1rem 0;
     text-align: center;

@@ -27,7 +27,7 @@ export default function Alerts() {
   const [selectedCategory, setSelectedCategory] = useState('critical');
   const [openModal, setOpenModal] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState(null);
-  
+
   const handleOpenModal = (alert) => {
     setSelectedAlert(alert);
     setOpenModal(true);
