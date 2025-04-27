@@ -95,15 +95,6 @@
     tabsize=2
 }
 
-\lstdefinelanguage{JavaScript}{
-    keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with, let, const},
-    sensitive=true,
-    comment=[l]{//},
-    morecomment=[s]{/*}{*/},
-    morestring=[b]",
-    morestring=[b]'
-}
-
 \lstdefinestyle{graystyle}{
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
@@ -127,8 +118,14 @@
 
 \lstset{style=graystyle}
 
-% captions settinng
-\captionsetup[listing]{
+% captions 
+% \captionsetup[listing]{
+%     font=small, % Set font size for captions
+%     labelformat=simple, % Use simple label format
+%     labelfont=normalfont,
+%     textfont={bf, tt},
+% }
+\captionsetup[lstlisting]{
     font=small, % Set font size for captions
     labelformat=simple, % Use simple label format
     labelfont=normalfont,
@@ -211,10 +208,10 @@
 % %===============================================================================
 % % Add any additional settings or configurations here
 % % Chpater Tittle Formatting
-% \titleformat{\chapter}[display]
-%     {\normalfont\huge\bfseries\raggedleft}
-%     {\vspace{-40pt}                                 % Space before chapter number
-%     \chaptertitlename\ \thechapter}
-%     {5pt}                                           % Reduced space between chapter number and title
-%     {\Huge}                                         % Title font size
-%     []                                              % No additional code after title
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries\raggedleft}
+    {\vspace{-40pt}                                 % Space before chapter number
+    \chaptertitlename\ \thechapter}
+    {5pt}                                           % Reduced space between chapter number and title
+    {\Huge}                                         % Title font size
+    []                                              % No additional code after title
