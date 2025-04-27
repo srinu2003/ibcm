@@ -65,7 +65,7 @@ function SafetyCompliance() {
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const response = await fetch('http://localhost:5000/api/ppe-detection', {
+            const response = await fetch('https://7pxr530l-5000.inc1.devtunnels.ms/api/ppe-detection', {
                 method: 'POST',
                 body: formData,
             });
