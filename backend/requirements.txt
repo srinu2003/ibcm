@@ -12,3 +12,4 @@ roboflow
 matplotlib
 torch
 pyOpenSSL
+flask_jwt_extended

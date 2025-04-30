@@ -23,13 +23,13 @@ function SafetyCompliance() {
     // Group detections into categories for better display
     const categorizeDetections = (detections) => {
         if (!detections) return { safety: [], violations: [], other: [] };
-        
+
         const categories = {
             safety: [],  // Safety equipment properly worn
             violations: [], // Safety violations (NO-*)
             other: []     // Other objects (Person, machinery, etc.)
         };
-        
+
         Object.entries(detections).forEach(([key, value]) => {
             if (key.startsWith('NO-')) {
                 categories.violations.push({ name: key, count: value });
@@ -39,7 +39,7 @@ function SafetyCompliance() {
                 categories.other.push({ name: key, count: value });
             }
         });
-        
+
         return categories;
     };
 
@@ -92,16 +92,16 @@ function SafetyCompliance() {
     };
 
     // Get categories from detection results
-    const categories = result?.detailed_counts 
-        ? categorizeDetections(result.detailed_counts) 
+    const categories = result?.detailed_counts
+        ? categorizeDetections(result.detailed_counts)
         : { safety: [], violations: [], other: [] };
-    
+
     return (
         <div className={styles.pageContainer}>
             <div className={styles.card}>
                 <h1 className={styles.title}>Worker Safety Detection</h1>
                 <p className={styles.subtitle}>Upload an image to detect safety equipment compliance</p>
-                
+
                 {/* Upload Instructions */}
                 <div className={styles.instructionsContainer}>
                     <ul className={styles.instructionsList}>
@@ -126,16 +126,16 @@ function SafetyCompliance() {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <label className={styles.fileInput}>
-                        <input 
-                            type="file" 
+                        <input
+                            type="file"
                             ref={fileInputRef}
-                            onChange={handleFileChange} 
-                            accept="image/*" 
+                            onChange={handleFileChange}
+                            accept="image/*"
                         />
                         Choose an Image
                     </label>
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         className={styles.uploadButton}
                         disabled={!selectedFile || isLoading}
                     >
@@ -154,31 +154,31 @@ function SafetyCompliance() {
                             <div className={styles.imageBox}>
                                 <h3 className={styles.imageTitle}>Detected Objects</h3>
                                 {result.annotated_image ? (
-                                    <img 
-                                        src={`data:image/jpeg;base64,${result.annotated_image}`} 
-                                        alt="Annotated" 
-                                        className={styles.image} 
+                                    <img
+                                        src={`data:image/jpeg;base64,${result.annotated_image}`}
+                                        alt="Annotated"
+                                        className={styles.image}
                                     />
                                 ) : (
                                     <p>No annotated image available</p>
                                 )}
                             </div>
                         </div>
-                        
+
                         {/* Display PPE detection counts by category */}
                         <div className={styles.countsContainer}>
                             <h3 className={styles.countTitle}>Safety Analysis Results:</h3>
-                            
+
                             {/* Violations - most important to highlight */}
                             {categories.violations.length > 0 && (
                                 <div className={styles.categorySection}>
-                                    <h4 className={styles.categoryTitle} style={{color: '#e74c3c'}}>
+                                    <h4 className={styles.categoryTitle} style={{ color: '#e74c3c' }}>
                                         Safety Violations Detected
                                     </h4>
                                     <ul className={styles.countsList}>
-                                        {categories.violations.map(({name, count}) => (
-                                            <li 
-                                                key={name} 
+                                        {categories.violations.map(({ name, count }) => (
+                                            <li
+                                                key={name}
                                                 className={styles.countItem}
                                                 style={{
                                                     backgroundColor: count > 0 ? '#fff8f8' : 'white',
@@ -188,7 +188,7 @@ function SafetyCompliance() {
                                                 <span className={styles.countLabel}>
                                                     Missing {formatLabel(name)}
                                                 </span>
-                                                <span 
+                                                <span
                                                     className={styles.countValue}
                                                     style={{
                                                         backgroundColor: count > 0 ? '#fadbd8' : '#ebf5fb',
@@ -202,17 +202,17 @@ function SafetyCompliance() {
                                     </ul>
                                 </div>
                             )}
-                            
+
                             {/* Safety equipment properly worn */}
                             {categories.safety.length > 0 && (
                                 <div className={styles.categorySection}>
-                                    <h4 className={styles.categoryTitle} style={{color: '#2ecc71'}}>
+                                    <h4 className={styles.categoryTitle} style={{ color: '#2ecc71' }}>
                                         Safety Equipment Detected
                                     </h4>
                                     <ul className={styles.countsList}>
-                                        {categories.safety.map(({name, count}) => (
-                                            <li 
-                                                key={name} 
+                                        {categories.safety.map(({ name, count }) => (
+                                            <li
+                                                key={name}
                                                 className={styles.countItem}
                                                 style={{
                                                     backgroundColor: 'white',
@@ -222,7 +222,7 @@ function SafetyCompliance() {
                                                 <span className={styles.countLabel}>
                                                     {formatLabel(name)}
                                                 </span>
-                                                <span 
+                                                <span
                                                     className={styles.countValue}
                                                     style={{
                                                         backgroundColor: '#e8f8f5',
@@ -236,17 +236,17 @@ function SafetyCompliance() {
                                     </ul>
                                 </div>
                             )}
-                            
+
                             {/* Other detections */}
                             {categories.other.length > 0 && (
                                 <div className={styles.categorySection}>
-                                    <h4 className={styles.categoryTitle} style={{color: '#3498db'}}>
+                                    <h4 className={styles.categoryTitle} style={{ color: '#3498db' }}>
                                         Other Objects Detected
                                     </h4>
                                     <ul className={styles.countsList}>
-                                        {categories.other.map(({name, count}) => (
-                                            <li 
-                                                key={name} 
+                                        {categories.other.map(({ name, count }) => (
+                                            <li
+                                                key={name}
                                                 className={styles.countItem}
                                                 style={{
                                                     backgroundColor: 'white',
@@ -256,7 +256,7 @@ function SafetyCompliance() {
                                                 <span className={styles.countLabel}>
                                                     {formatLabel(name)}
                                                 </span>
-                                                <span 
+                                                <span
                                                     className={styles.countValue}
                                                     style={{
                                                         backgroundColor: '#ebf5fb',
@@ -270,7 +270,7 @@ function SafetyCompliance() {
                                     </ul>
                                 </div>
                             )}
-                            
+
                             {/* No detections case */}
                             {!result.detailed_counts || Object.keys(result.detailed_counts).length === 0 && (
                                 <p>No detection results available</p>

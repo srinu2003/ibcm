@@ -88,16 +88,12 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Upload Images",
-          url: "/#image-comparison-header",
-        },
-        {
-          title: "Stage Classification",
-          url: "/progress#classification",
-        },
-        {
-          title: "Compare Progress",
+          title: "Update Progress",
           url: "/progress#compare",
+        },
+        {
+          title: "Upload Images",
+          url: "/progress#image-comparison-header",
         },
         {
           title: "Timeline View",
@@ -129,108 +125,29 @@ const data = {
       ],
     },
     {
-      title: "Projects",
-      url: "/projects",
-      icon: Construction,
-      items: [
-        {
-          title: "All Projects",
-          url: "/projects#all",
-        },
-        {
-          title: "Add New Project",
-          url: "/projects#new",
-        },
-        {
-          title: "Project Details",
-          url: "/projects#details",
-        },
-        {
-          title: "Locations",
-          url: "/projects#locations",
-        },
-      ],
-    },
-    {
       title: "Reporting",
       url: "/reports",
       icon: FileBarChart,
-      items: [
-        {
-          title: "Progress Reports",
-          url: "/reports#progress",
-        },
-        {
-          title: "Safety Reports",
-          url: "/reports#safety",
-        },
-        {
-          title: "Export Data",
-          url: "/reports#export",
-        },
-      ],
-    },
-    {
-      title: "Users",
-      url: "/users",
-      icon: Users,
-      items: [
-        {
-          title: "User Management",
-          url: "/users#manage",
-        },
-        {
-          title: "Roles & Permissions",
-          url: "/users#roles",
-        },
-        {
-          title: "Audit Logs",
-          url: "/users#audit",
-        },
-      ],
     },
     {
       title: "Documentation",
       url: "/docs",
       icon: BookOpen,
-      items: [
-        {
-          title: "Getting Started",
-          url: "/docs#getting-started",
-        },
-        {
-          title: "ML Models",
-          url: "/docs#ml-models",
-        },
-        {
-          title: "API Reference",
-          url: "/docs#api",
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "Getting Started",
+      //     url: "/docs#getting-started",
+      //   },
+      //   {
+      //     title: "ML Models",
+      //     url: "/docs#ml-models",
+      //   },
+      //   {
+      //     title: "API Reference",
+      //     url: "/docs#api",
+      //   },
+      // ],
     },
-    // {
-    //   title: "Settings",
-    //   url: "/settings",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       url: "/settings/general",
-    //     },
-    //     {
-    //       title: "Notifications",
-    //       url: "/settings/notifications",
-    //     },
-    //     {
-    //       title: "API Keys",
-    //       url: "/settings/api-keys",
-    //     },
-    //     {
-    //       title: "ML Parameters",
-    //       url: "/settings/ml-parameters",
-    //     },
-    //   ],
-    // },
   ],
   navSecondary: [
     {

@@ -95,7 +95,7 @@ const ImageUpload = () => {
         noise_threshold: noiseThreshold
       });
 
-      const response = await axios.post('https://7pxr530l-5000.inc1.devtunnels.ms/api/ssim', formData, {
+      const response = await axios.post('https://127.0.0.1:5000/api/ssim', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
