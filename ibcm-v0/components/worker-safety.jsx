@@ -30,7 +30,7 @@ export default function WorkerSafety() {
   const categorizeDetections = (classCountsObj, detailedCountsObj) => {
     // Merge both counts objects into one for processing
     const detections = { ...(classCountsObj || {}), ...(detailedCountsObj || {}) };
-    
+
     if (Object.keys(detections).length === 0) return { safety: [], violations: [], other: [] };
 
     const categories = {
@@ -41,14 +41,14 @@ export default function WorkerSafety() {
 
     // All possible classes from data.yaml
     const safetyEquipment = ['Hardhat', 'Mask', 'Safety Vest', 'Safety Cone'];
-    const violations = ['NO-Hardhat', 'NO-Mask', 'NO-Safety Vest']; 
+    const violations = ['NO-Hardhat', 'NO-Mask', 'NO-Safety Vest'];
     const personObjects = ['Person'];
     const vehicleObjects = ['machinery', 'vehicle'];
 
     // Process each detection - ensure case-insensitive matching
     Object.entries(detections).forEach(([key, value]) => {
       const keyLower = key.toLowerCase();
-      
+
       if (violations.some(v => v.toLowerCase() === keyLower) || key.startsWith('NO-')) {
         categories.violations.push({ name: key, count: value });
       } else if (safetyEquipment.some(s => s.toLowerCase() === keyLower)) {
@@ -135,12 +135,12 @@ The backend is running with a self-signed certificate that the browser needs to 
       } else {
         // We have a valid response from the API
         const data = await response.json();
-        
+
         // Make sure we handle both class_counts and detailed_counts
         if (data) {
           // Ensure we set the result with all the data
           setResult(data);
-          
+
           // Clear any previous error messages
           setErrorMessage(null);
         } else {
@@ -170,7 +170,7 @@ The backend is running with a self-signed certificate that the browser needs to 
   };
 
   // Get categories from detection results - consider both class_counts and detailed_counts
-  const categories = result 
+  const categories = result
     ? categorizeDetections(result.class_counts, result.detailed_counts)
     : { safety: [], violations: [], other: [] };
 
@@ -205,39 +205,85 @@ The backend is running with a self-signed certificate that the browser needs to 
           </Alert>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2"
-          >
-            <Upload className="h-4 w-4" />
-            Choose an Image
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/*"
-              className="hidden"
-            />
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={!selectedFile || isLoading}
-            className={isLoading ? "opacity-70" : ""}
-          >
-            {isLoading ? 'Processing...' : 'Upload and Analyze'}
-          </Button>
-        </div>
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <Upload className="mr-2 h-5 w-5" /> Upload Safety Image
+        </h2>
 
-        {imageName && (
-          <div className="flex items-center gap-2 mb-4">
-            <Badge variant="outline" className="text-xs font-normal">
-              Selected file
-            </Badge>
-            <span className="text-sm text-muted-foreground">{imageName}</span>
-          </div>
-        )}
+        <Card className="mb-6 shadow-none">
+          <CardContent className="p-4 sm:p-6">
+            <p className="text-muted-foreground mb-4 mx-auto">
+              Upload or drag and drop an image of workers at the construction site to detect PPE compliance.
+              The system will analyze the image and highlight any safety violations.
+            </p>
+
+            <div>
+              <p className="text-sm font-medium mb-2">Site Safety Image</p>
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-lg p-4 h-48 sm:h-64 flex flex-col items-center justify-center cursor-pointer transition-colors hover:border-primary/50`}
+              >
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+
+                {selectedFile ? (
+                  <div className="w-full h-full flex flex-col items-center">
+                    <div className="relative w-full h-32 sm:h-40 mb-2">
+                      {/* Add a placeholder to show the selected file name if image can't be shown */}
+                      <img
+                        src={selectedFile ? URL.createObjectURL(selectedFile) : "/placeholder.svg"}
+                        alt="Preview"
+                        className="w-full h-full object-contain"
+                        onLoad={() => selectedFile && URL.createObjectURL(selectedFile)}
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedFile(null);
+                          setImageName(null);
+                        }}
+                        className="absolute -top-2 -right-2 bg-white text-red-500 hover:bg-red-50 rounded-full p-1 shadow-md border border-red-200"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                    </div>
+                    <p className="text-sm text-muted-foreground truncate max-w-full">{imageName}</p>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-2" />
+                    <p className="text-xs sm:text-sm text-muted-foreground text-center">
+                      Drag & drop an image here, or click to select
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center mt-6">
+              <Button
+                onClick={handleSubmit}
+                disabled={!selectedFile || isLoading}
+                size="lg"
+                className="w-full sm:w-auto mb-2"
+              >
+                {isLoading ? 'Processing...' : 'Analyze Safety Compliance'}
+              </Button>
+              <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
+                <div className={`h-2 w-2 rounded-full ${selectedFile ? "bg-primary" : "bg-muted"}`}></div>
+                <span>Image {selectedFile ? "uploaded" : "not uploaded"}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {isLoading && (
           <div className="text-center my-8">
@@ -252,7 +298,9 @@ The backend is running with a self-signed certificate that the browser needs to 
 
             <div className="flex flex-col lg:flex-row gap-6">
               <div className="flex-1">
-                <h3 className="text-lg font-medium mb-3">Detected Objects</h3>
+                <h3 className="text-xl font-semibold mb-3 flex items-center">
+                  <AlertTriangle className="mr-2 h-5 w-5 text-amber-500" /> Detection Results
+                </h3>
                 {result.annotated_image ? (
                   <div className="border rounded-lg overflow-hidden">
                     <img
@@ -269,7 +317,9 @@ The backend is running with a self-signed certificate that the browser needs to 
               </div>
 
               <div className="flex-1">
-                <h3 className="text-lg font-medium mb-3">Safety Analysis Results</h3>
+                <h3 className="text-xl font-semibold mb-3 flex items-center">
+                  <Check className="mr-2 h-5 w-5 text-green-500" /> Safety Analysis Results
+                </h3>
 
                 {/* Violations - most important to highlight */}
                 {categories.violations.length > 0 && (

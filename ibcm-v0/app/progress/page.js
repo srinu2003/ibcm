@@ -19,7 +19,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 import { FontSizeToggle } from "@/components/font-size-toggle"
 import { NotificationPopover } from "@/components/notification-popover"
-import ImageComparison from "@/components/image-comparison"
+import ConstructionProgress from "@/components/construction-progress"
 
 
 export default function Page() {
@@ -47,18 +47,17 @@ export default function Page() {
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href="#">
-                      Building Your Application
+                      Construction Site Management
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                    <BreadcrumbPage>Construction Progress</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
             <div className="flex items-center gap-2">
-              {/* <FontSizeToggle increaseFontSize={increaseFontSize} decreaseFontSize={decreaseFontSize} /> */}
               <NotificationPopover />
               <ThemeToggle />
             </div>
@@ -70,12 +69,12 @@ export default function Page() {
               Project Stats
             </div>
             <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
-              PPE Safty stats</div>
+              PPE Safety Stats</div>
             <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
               Weather
             </div>
           </div>
-          <ImageComparison  />
+          <ConstructionProgress />
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
           </div>
         </div>

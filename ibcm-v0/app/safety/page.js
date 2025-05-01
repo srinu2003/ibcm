@@ -17,7 +17,6 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { FontSizeToggle } from "@/components/font-size-toggle"
 import { NotificationPopover } from "@/components/notification-popover"
 import WorkerSafety from "@/components/worker-safety.jsx"
 
@@ -58,7 +57,6 @@ export default function Page() {
                             </Breadcrumb>
                         </div>
                         <div className="flex items-center gap-2">
-                            {/* <FontSizeToggle increaseFontSize={increaseFontSize} decreaseFontSize={decreaseFontSize} /> */}
                             <NotificationPopover />
                             <ThemeToggle />
                         </div>
@@ -70,7 +68,7 @@ export default function Page() {
                             Project Stats
                         </div>
                         <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
-                            PPE Safty Stats
+                            PPE Safety Stats
                         </div>
                         <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
                             Weather
