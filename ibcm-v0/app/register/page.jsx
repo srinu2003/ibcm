@@ -12,7 +12,7 @@ export default function RegisterPage() {
               className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <Building className="size-4" />
             </div>
-            Acme Inc.
+            IBCM
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
